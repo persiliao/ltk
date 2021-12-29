@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Author:  Persi.Liao <xiangchu.liao AT gmail.com>
+# 
+# Notes: Linux Took Kit for centos
+#
+# Project home page:
+#    https://github.com/persiliao/ltk
+
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+# Check if user is root
+[ $(id -u) != "0" ] && { echo "${CFAILURE}Error: You must be root to run this script${CEND}"; exit 1; }
+
+ltk_dir=$(dirname "`readlink -f $0`")
+pushd ${ltk_dir} > /dev/null
+. ./include/color.sh
+
+# Use default SSH port 22. If you use another SSH port on your server
+if [ -e "/etc/ssh/sshd_config" ]; then
+  [ -z "`grep ^Port /etc/ssh/sshd_config`" ] && now_ssh_port=22 || now_ssh_port=`grep ^Port /etc/ssh/sshd_config | awk '{print $2}' | head -1`
+  if [ ${now_ssh_port} -eq 22 ]; then
+    while :; do echo
+      read -e -p "${CMAGENTA}Please input SSH port(Default: ${now_ssh_port}): ${CEND}" ssh_port
+      ssh_port=${ssh_port:-${now_ssh_port}}
+      if [ ${ssh_port} -eq 22 >/dev/null 2>&1 -o ${ssh_port} -gt 1024 >/dev/null 2>&1 -a ${ssh_port} -lt 65535 >/dev/null 2>&1 ]; then
+        break
+      else
+        echo "${CWARNING}input error! Input range: 22,1025~65534${CEND}"
+        exit 1
+      fi
+    done
+
+    if [ -z "`grep ^Port /etc/ssh/sshd_config`" -a "${ssh_port}" != '22' ]; then
+      sed -i "s@^#Port.*@&\nPort ${ssh_port}@" /etc/ssh/sshd_config
+    elif [ -n "`grep ^Port /etc/ssh/sshd_config`" ]; then
+      sed -i "s@^Port.*@Port ${ssh_port}@" /etc/ssh/sshd_config
+    fi
+  fi
+  if [ -z ${ssh_port} ]; then
+    ssh_port=${now_ssh_port}
+  fi
+  echo -e "Current SSH port: ${CSUCCESS}${ssh_port}${CEND}"
+fi
+
+# Add a default user group to run the web application
+www_group=`cat /etc/group|grep www|grep -v grep|wc -l`
+if [ ${www_group} -eq 0 ]; then
+  groupadd -f www
+  if [ $? -eq 0 ]; then
+    echo -e "${CSUCCESS}User group [www] created successfully${CEND}"
+  fi
+fi
+
+# Add a user for remote continuous deployment
+while :; do echo
+  read -e -p "${CMAGENTA}Do you want to add for remote continuous deployment? [y/n]:${CEND} " want_add_user
+  want_add_user=${want_add_user:-'y'}
+  if [ -n ${want_add_user} -a 'y' = ${want_add_user} ]; then
+    user_password=`< /dev/urandom tr -dc A-Za-z0-9 | head -c16`
+    while :; do echo
+      read -e -p "${CMAGENTA}Please input user${CEND}: " username
+      username=${username:-'deploy'}
+      if [ -n ${username} ]; then
+        useradd -M -g www -p ${user_password} ${username}
+        if [ $? -eq 0 ]; then
+          echo -e "${CSUCCESS}Add user [${username}] successfully${CEND}"
+          echo -e "user: ${CSUCCESS}${username}${CEND}"
+          echo -e "password: ${CSUCCESS}${user_password}${CEND}\n"
+          break
+        fi
+      fi
+    done
+  fi
+  break
+done
