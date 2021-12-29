@@ -3,6 +3,8 @@ version: "3"
 services:
   ltk:
     image: jdeathe/centos-ssh:latest
+    labels: 
+      com.persiliao.ltk.description: ltk development & testing
     container_name: ltk
     tty: true
     volumes:
