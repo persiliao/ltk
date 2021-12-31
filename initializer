@@ -74,3 +74,52 @@ while :; do echo
   fi
   break
 done
+
+# git default setting
+if [ -x "$(command -v git)" ]; then
+  while :; do echo
+    read -e -p "${CMAGENTA}Do I need to set the git default configuration? [y/n]:${CEND} " want_set_git
+    want_set_git=${want_set_git:-'y'}
+    if [ -n ${want_set_git} -a 'y' = ${want_set_git} ]; then
+      while :; do echo
+        read -e -p "${CMAGENTA}Please input user.name${CEND}: " gitUserName
+        if [ -n ${gitUsername} ]; then
+          break
+        fi
+      done
+      while :; do echo
+        read -e -p "${CMAGENTA}Please input user.email${CEND}: " gitUserEmail
+        if [ -n ${gitUserEmail} ]; then
+          break
+        fi
+      done
+      # user
+      git config --global user.name "${gitUserName}"
+      git config --global user.email "${gitUserEmail}"
+      git config --global init.defaultBranch master
+      # core
+      git config --global core.fileMode false
+      git config --global core.packedGitLimit 128m
+      git config --global core.packedGitWindowSize 128m
+      # pack
+      git config --global pack.deltaCacheSize 128m
+      git config --global pack.packSizeLimit 128m
+      git config --global pack.windowMemory 128m
+      # pull push
+      git config --global pull.ff only
+      git config --global pull.rebase true
+      git config --global push.default simple
+      # http https
+      git config --global http.postBuffer 128m
+      git config --global https.postBuffer 128m
+
+      if [ `uname` == "Darwin" ]; then
+          git config --global credential.helper osxkeychain
+      else
+          git config --global credential.helper store
+      fi
+    fi
+    break
+  done
+fi
+
