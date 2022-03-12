@@ -64,6 +64,7 @@ while :; do echo
       if [ -n ${username} ]; then
         useradd -M -g www -p ${user_password} ${username}
         if [ $? -eq 0 ]; then
+          echo 'deploy ALL=(ALL) NOPASSWD: /bin/systemctl' >> /etc/sudoers
           echo -e "${CSUCCESS}Add user [${username}] successfully${CEND}"
           echo -e "user: ${CSUCCESS}${username}${CEND}"
           echo -e "password: ${CSUCCESS}${user_password}${CEND}\n"
