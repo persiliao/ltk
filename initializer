@@ -72,7 +72,7 @@ while :; do echo
           chmod 0600 "${user_home}/.ssh"/authorized_keys
           chown ${username}:www -R "${user_home}/.ssh"
           # Generate key
-          ssh-keygen -t dsa -f "${user_home}/.ssh/deploy"
+          ssh-keygen -t rsa -f "${user_home}/.ssh/deploy"
           cat "${user_home}/.ssh/deploy.pub" > "${user_home}/.ssh"/authorized_keys
           echo -e "${CSUCCESS}Authorized private key:${CEND}"
           cat "${user_home}/.ssh/deploy"
