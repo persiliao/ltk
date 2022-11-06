@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  ltk:
+    image: jdeathe/centos-ssh:latest
+    labels:
+      com.persiliao.ltk.description: ltk development & test
+    container_name: ltk
+    tty: true
+    volumes:
+      - .:/root/ltk
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: /bin/bash
+  
