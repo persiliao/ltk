@@ -8,7 +8,7 @@
 #    https://github.com/persiliao/ltk
 
 cd "$(dirname "$0")" || {
-  fmt_error "You must be ${FMT_GREEN}root${FMT_RESET} ${FMT_RED}to run this script.";
+  fmt_error "You do not have permission to do this."
   exit 1;
 }
 
