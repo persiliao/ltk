@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/sh
 
 command_exists() {
   command -v "$@" >/dev/null 2>&1
@@ -185,6 +185,8 @@ setup_color() {
   FMT_RESET=$(printf '\033[0m')
 }
 
+setup_color
+
 fmt_underline() {
   is_tty && printf '\033[4m%s\033[24m\n' "$*" || printf '%s\n' "$*"
 }
@@ -210,134 +212,19 @@ fmt_tips() {
   printf '%s%s%s' "${FMT_BOLD}${FMT_YELLOW}" "$*" "$FMT_RESET" >&2
 }
 
-get_user_home_dir() {
-  LTK_USER_NAME=$1
-  if [ "${LTK_USER_NAME}" = "" ]; then
-    fmt_error "The user name cannot be empty."
-    return 1
-  fi
-
-  LTK_USER_INFO=$(grep "${LTK_USER_NAME}" /etc/passwd | head -1)
-  # shellcheck disable=SC2039
-  # shellcheck disable=SC2206
-  LTK_USER_INFO_ARRAY=(${LTK_USER_INFO//:/ })
-  # shellcheck disable=SC2039
-  echo "${LTK_USER_INFO_ARRAY[5]}"
-}
-
-generate_random_str() {
-  LTK_STRING_LENGTH=$1
-  if [ "${LTK_STRING_LENGTH}" = "" ]; then
-    LTK_STRING_LENGTH=16
-  fi
-
-  < /dev/urandom tr -dc 'A-Za-z0-9' | head -c${LTK_STRING_LENGTH}
-}
-
-generate_password() {
-  LTK_PASSWORD_LENGTH=$1
-  if [ "${LTK_PASSWORD_LENGTH}" = "" ]; then
-    LTK_PASSWORD_LENGTH=16
-  fi
-
-  < /dev/urandom tr -dc 'A-Za-z0-9!@#$%^&*()_+' | head -c${LTK_PASSWORD_LENGTH}
-}
-
-generate_ssh_key() {
-  LTK_KEY_FILE_PATH=$1
-  if [ "${LTK_KEY_FILE_PATH}" = "" ]; then
-    fmt_error "Please provide the key file path."
-    return 1
-  fi
-  ssh-keygen -t rsa -f "${LTK_KEY_FILE_PATH}"
-  return 0
-}
-
-deploy_ssh_public_key() {
-  LTK_USER_NAME=$1
-  if [ "${LTK_USER_NAME}" = "" ]; then
-    LTK_USER_NAME=$(id -u -n)
-  fi
-
-  LTK_KEY_FILE_PATH=$2
-  if [ ! -f "${LTK_KEY_FILE_PATH}" ]; then
-    fmt_error "Public key file not exits. path: ${LTK_KEY_FILE_PATH}"
-    return 1
-  fi
-
-  LTK_USER_HOME=$(get_user_home_dir "${LTK_USER_NAME}")
-
-  LTK_USER_SSH_DIRECTORY="${LTK_USER_HOME}/.ssh"
-  LTK_USER_SSH_AUTHORIZED_KEYS_PATH="${LTK_USER_SSH_DIRECTORY}/authorized_keys"
-
-  test -d "${LTK_USER_SSH_DIRECTORY}" || mkdir -p "${LTK_USER_SSH_DIRECTORY}"
-  chmod 0700 "${LTK_USER_SSH_DIRECTORY}"
-  test -f "${LTK_USER_SSH_AUTHORIZED_KEYS_PATH}" || touch "${LTK_USER_SSH_AUTHORIZED_KEYS_PATH}"
-  chmod 0600 "${LTK_USER_SSH_AUTHORIZED_KEYS_PATH}"
-  chown "${LTK_USER_NAME}" -R "${LTK_USER_SSH_DIRECTORY}"
-  cat "${LTK_KEY_FILE_PATH}" >> "${LTK_USER_SSH_AUTHORIZED_KEYS_PATH}"
-
-  return 0
-}
-
-check_in_docker() {
-  if ! grep -q -i -c systemd /proc/1/sched; then
+ltk_sed_is_gnu() {
+  if sed --version | head -1 | grep -q -c GNU ; then
     return 0
   else
     return 1
   fi
 }
 
-systemd_service_restart() {
-  if ! command_exists "systemctl"; then
-    fmt_error "Command ${FMT_GREEN}systemctl${FMT_RESET} ${FMT_RED}not found."
-    return 1
+ltk_get_git_remote_repo_name() {
+  LTK_GIT_REPO_NAME=$(git remote -v | grep -i origin | head -1 | awk '{print $2}' | sed 's#^http[s]://\([^/]*\)/\([^\.]*\)#\2#g')
+  if [ -z "${LTK_GIT_REPO_NAME}" ]; then
+    fmt_error "The current directory is not a git repository (or any of the parent directories): .git !"
+    exit 1
   fi
-
-  LTK_SERVICE=$1
-  if [ "${LTK_SERVICE}" = "" ]; then
-    fmt_error "The service cannot be empty."
-    return 1
-  fi
-
-  fmt_notice "${LTK_SERVICE} service is restarting."
-  if systemctl restart "${LTK_SERVICE}"; then
-    fmt_information "${LTK_SERVICE} service restarted successfully."
-    return 0
-  else
-    fmt_error "${LTK_SERVICE} service restart failed."
-    return 1
-  fi
-}
-
-is_redhat() {
-  if [ -f /etc/redhat-release ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-is_ubuntu() {
-  if command_exists lsb_release; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-is_mac() {
-  if [ "$(uname)" = "Darwin" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-validate_email() {
-  if echo "${1}" | grep -q -E -c "[A-Za-z0-9._]+@[A-Za-z0-9.]+\.[a-zA-Z]{2,4}"; then
-    return 0
-  else
-    return 1
-  fi
+  echo "${LTK_GIT_REPO_NAME}"
 }
