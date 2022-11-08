@@ -14,7 +14,7 @@ cd "$(dirname "$0")" || {
 
 LTK_DIRECTORY="$(pwd)"
 
-. "${LTK_DIRECTORY}/include/bootstrap.sh"
+. "${LTK_DIRECTORY}/bootstrap.sh"
 
 setup_optimize_git_config() {
   if ! command_exists git; then

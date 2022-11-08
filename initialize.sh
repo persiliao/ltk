@@ -14,7 +14,7 @@ cd "$(dirname "$0")" || {
 
 LTK_DIRECTORY="$(pwd)"
 
-. "${LTK_DIRECTORY}/include/bootstrap.sh"
+. "${LTK_DIRECTORY}/bootstrap.sh"
 
 # Check if user is root
 if ! is_root; then
