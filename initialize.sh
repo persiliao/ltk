@@ -111,8 +111,8 @@ setup_set_ssh_pubkey_login() {
       fi
     done
   elif [ "${LTK_OPT_SSH_PUBLIC_KEY_USE}" = 'n' ]; then
-    get_user_home_dir "${LTK_LOGIN_USER}"
-    generate_random_str
+    LTK_USER_HOME=$(get_user_home_dir "${LTK_LOGIN_USER}")
+    LTK_RANDOM_STR=generate_random_str
     LTK_SSH_PRIVATE_KEY_PATH="${LTK_USER_HOME}/${LTK_RANDOM_STR}"
     fmt_notice "Start generating the SSH login key..."
 
@@ -201,8 +201,7 @@ setup_add_cicd_deploy_user() {
   useradd -N -g www -c "CI/CD Deployer" ${LTK_DEPLOYER_USER}
 
   if [ "${LTK_DEPLOYER_LOGIN_METHOD}" = "p" ]; then
-    generate_password 32
-    LTK_DEPLOYER_PASSWORD="${LTK_NEW_PASSWORD}"
+    LTK_DEPLOYER_PASSWORD=$(generate_password 32)
     if ! usermod -p "${LTK_DEPLOYER_PASSWORD}" "${LTK_DEPLOYER_USER}"; then
       fmt_error "Failed to set the user password."
       exit 1

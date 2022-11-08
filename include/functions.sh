@@ -222,8 +222,7 @@ get_user_home_dir() {
   # shellcheck disable=SC2206
   LTK_USER_INFO_ARRAY=(${LTK_USER_INFO//:/ })
   # shellcheck disable=SC2039
-  LTK_USER_HOME="${LTK_USER_INFO_ARRAY[5]}"
-  return 0
+  echo "${LTK_USER_INFO_ARRAY[5]}"
 }
 
 generate_random_str() {
@@ -232,8 +231,7 @@ generate_random_str() {
     LTK_STRING_LENGTH=16
   fi
 
-  # shellcheck disable=SC2034
-  LTK_RANDOM_STR=$(< /dev/urandom tr -dc 'A-Za-z0-9' | head -c${LTK_STRING_LENGTH})
+  < /dev/urandom tr -dc 'A-Za-z0-9' | head -c${LTK_STRING_LENGTH}
 }
 
 generate_password() {
@@ -242,8 +240,7 @@ generate_password() {
     LTK_PASSWORD_LENGTH=16
   fi
 
-  # shellcheck disable=SC2034
-  LTK_NEW_PASSWORD=$(< /dev/urandom tr -dc 'A-Za-z0-9!@#$%^&*()_+' | head -c${LTK_PASSWORD_LENGTH})
+  < /dev/urandom tr -dc 'A-Za-z0-9!@#$%^&*()_+' | head -c${LTK_PASSWORD_LENGTH}
 }
 
 generate_ssh_key() {
@@ -268,7 +265,7 @@ deploy_ssh_public_key() {
     return 1
   fi
 
-  get_user_home_dir "${LTK_USER_NAME}"
+  LTK_USER_HOME=$(get_user_home_dir "${LTK_USER_NAME}")
 
   LTK_USER_SSH_DIRECTORY="${LTK_USER_HOME}/.ssh"
   LTK_USER_SSH_AUTHORIZED_KEYS_PATH="${LTK_USER_SSH_DIRECTORY}/authorized_keys"
