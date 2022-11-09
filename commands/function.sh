@@ -220,7 +220,7 @@ ltk_sed_is_gnu() {
 
 ltk_get_git_remote_repo_name() {
   LTK_GIT_REPO_NAME=$(git remote -v | grep -i origin | head -1 | awk '{print $2}' | sed 's#^http[s]://\([^/]*\)/\([^\.]*\)#\2#g')
-  if [ -z "$PERSI_GIT_REPO_NAME" ]; then
+  if [ -z "${LTK_GIT_REPO_NAME}" ]; then
     fmt_error "The current directory is not a git repository (or any of the parent directories): .git !"
     exit 1
   fi
