@@ -185,6 +185,8 @@ setup_color() {
   FMT_RESET=$(printf '\033[0m')
 }
 
+setup_color
+
 fmt_underline() {
   is_tty && printf '\033[4m%s\033[24m\n' "$*" || printf '%s\n' "$*"
 }
