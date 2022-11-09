@@ -35,7 +35,7 @@ ltk_tail() {
 }
 
 ltk_http_v2ray_proxy() {
-  if ! netstat -an | grep -c 127.0.0.1.1087; then
+  if ! netstat -an | grep -q -c 127.0.0.1.1087; then
     fmt_error "v2ray does not appear to be started."
     return 1
   fi
