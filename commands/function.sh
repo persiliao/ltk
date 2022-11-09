@@ -205,7 +205,7 @@ fmt_notice() {
 }
 
 fmt_information() {
-  printf '%sSuccessfully: %s%s\n' "${FMT_BOLD}${FMT_GREEN}" "$*" "$FMT_RESET" >&2
+  printf '%s%s%s\n' "${FMT_BOLD}${FMT_GREEN}" "$*" "$FMT_RESET" >&2
 }
 
 fmt_tips() {
