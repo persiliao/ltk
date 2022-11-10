@@ -8,7 +8,7 @@
 
 #### sh.sh
 
-> 需要使用root用户执行
+> 需要使用 `root` 用户执行
 
 * [x] 修改`sshd server` 默认端口
 * [x] 设置`sshd keeplive` 保持连接
@@ -22,7 +22,7 @@
 
 #### docker.sh
 
-> 需要使用root用户执行
+> 需要使用 `root` 用户执行
 
 * [x] 安装 `docker`
 
@@ -43,6 +43,6 @@
 
 #### wp.sh
 
-> 需要使用root用户执行
+> 需要使用 `root` 用户执行
 
 * [x] 安装 `wp cli`
