@@ -16,6 +16,10 @@
 * [x] 创建www用户组
 * [x] 创建普通用户，主要是用于非root操作，例: docker, CI/CD远程SSH
 
+#### alias.sh
+
+* [x] 安装一些常用的alias命令
+
 #### docker.sh
 
 > 需要使用root用户执行
@@ -36,3 +40,7 @@
 
 * [x] 安装vim
 * [x] 安装.vimrc配置
+
+#### wp.sh
+
+* [x] 安装 wp cli
