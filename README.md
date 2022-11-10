@@ -10,39 +10,39 @@
 
 > 需要使用root用户执行
 
-* [x] 修改sshd server 默认端口
-* [x] 设置sshd keeplive 保持连接
-* [x] 设置sshd 禁止root使用密码登录，只允许密钥登录。**注意保存好私钥文件**
-* [x] 创建www用户组
-* [x] 创建普通用户，主要是用于非root操作，例: docker, CI/CD远程SSH
+* [x] 修改`sshd server` 默认端口
+* [x] 设置`sshd keeplive` 保持连接
+* [x] 设置`sshd` 禁止root使用密码登录，只允许密钥登录。**注意保存好私钥文件**
+* [x] 创建`www`用户组
+* [x] 创建普通用户，默认用户名 `deployer` ，推荐主要是用于非`root`操作，例: `docker`, CI/CD远程SSH
 
 #### alias.sh
 
-* [x] 安装一些常用的alias命令
+* [x] 安装一些常用的 `alias` 命令, 安装在 `$HOME/.ltk` 目录下
 
 #### docker.sh
 
 > 需要使用root用户执行
 
-* [x] 安装docker
+* [x] 安装 `docker`
 
 #### ohmyzsh.sh
 
-* [x] 安装zsh、ohmyzsh
-* [x] 安装persi-zsh-theme(可选)
+* [x] 安装`zsh`、`ohmyzsh`
+* [x] 安装`persi-zsh-theme`(可选)
 
 #### git.sh
 
-* [x] 安装git
-* [x] 设置 git 常用配置
+* [x] 安装 `git`
+* [x] 设置 `git` 常用配置
 
 #### vimrc.sh
 
-* [x] 安装vim
-* [x] 安装.vimrc配置
+* [x] 安装 `vim`
+* [x] 安装 `.vimrc` 配置
 
 #### wp.sh
 
 > 需要使用root用户执行
 
-* [x] 安装 wp cli
+* [x] 安装 `wp cli`
