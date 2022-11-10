@@ -6,7 +6,7 @@
 
 ## 特性
 
-#### initialize.sh
+#### sh.sh
 
 > 需要使用root用户执行
 
@@ -42,5 +42,7 @@
 * [x] 安装.vimrc配置
 
 #### wp.sh
+
+> 需要使用root用户执行
 
 * [x] 安装 wp cli
