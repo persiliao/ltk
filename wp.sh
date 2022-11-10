@@ -28,6 +28,7 @@ setup_install_wp_cli() {
     read -r opt
     case $opt in
       y*|Y*|"") ;;
+      n*|N*) fmt_notice "wp cli install skipped."; return ;;
       *) fmt_notice "Invalid choice. wp cli install skipped."; return ;;
     esac
 
