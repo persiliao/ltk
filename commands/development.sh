@@ -116,6 +116,7 @@ alias setUbuntuAptMirror=ltk_ubuntu_set_apt_mirror
 alias setNpmRegistry=ltk_npm_set_registry
 alias unsetNpmRegistry='npm config delete registry'
 alias showNpmRegistry='npm config get registry'
+alias pipUpgradeSelf='pip install --upgrade pip'
 
 # CI/CD
 alias droneSignRepository=ltk_drone_sign_repository
