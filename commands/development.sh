@@ -132,6 +132,66 @@ alias sc-logs='journalctl -f -u'
 alias acmeRenew=ltk_acme_renew_ssl
 
 # Git
+ltk_gacsp() {
+    local message=$1
+    if [[ -z ${message} ]]; then
+        fmt_error "Aborting commit due to empty commit message"
+        return
+    fi
+    local branch=$(git_current_branch)
+    git add . && git commit -m "${*}" && git pull origin "${branch}" && git submodule update --recursive --remote --merge && git add . && git commit -m "${*}" && git push origin "${branch}"
+}
+
+ltk_gacp() {
+    local message=$1
+    if [ -z "${message}" ]; then
+        fmt_error "Aborting commit due to empty commit message"
+        return
+    fi
+    branch=$(git_current_branch)
+    git add . && git commit -m "${*}" && git pull origin "${branch}" && git push origin "${branch}"
+}
+
+ltk_gacmsg() {
+    local message=$1
+    if [ -z "${message}" ]; then
+        fmt_error "Aborting commit due to empty commit message"
+        return
+    fi
+    git add . && git commit -m "${*}"
+}
+
+ltk_gacmsgcp() {
+    git add . && git commit -m "refactor: Code optimization"
+}
+
+ltk_gcmsg() {
+    local message=$1
+    if [ -z "${message}" ]; then
+        fmt_error "Aborting commit due to empty commit message"
+        return
+    fi
+    git commit -m "${*}"
+}
+
+ltk_gacmsgd() {
+    local message=$1
+    if [ -z "${message}" ]; then
+        fmt_error "Aborting commit due to empty commit message"
+        return
+    fi
+    git commit --amend -m "${*}"
+}
+
+ltk_gcmsgcp() {
+    git commit -m "refactor: Code optimization"
+}
+
+ltk_gitPushAll() {
+    git remote -v|grep push|awk '{print $1}'|xargs -t -n 1 git push
+}
+
+# Git
 alias gtdall='git tag |xargs git tag -d'
 alias gct='git checkout test'
 alias gmt='git merge test'
@@ -142,11 +202,11 @@ alias gsa='git submodule add'
 alias gsui='git submodule update --init --recursive'
 alias gsurm='git submodule update --recursive --remote --merge'
 alias ggplsurm='git pull origin $(git_main_branch) && git submodule update --recursive --remote --merge'
-alias gcmsg='persi_gcmsg'
-alias gcmsgd='persi_gacmsgd'
-alias gcmsgcp='persi_gcmsgcp'
-alias gacmsg='persi_gacmsg'
-alias gacmsgcp='persi_gacmsgcp'
-alias gacsp='persi_gacsp'
-alias gacp='persi_gacp'
-alias ggpushall='persi_gitPushAll'
+alias gcmsg='ltk_gcmsg'
+alias gcmsgd='ltk_gacmsgd'
+alias gcmsgcp='ltk_gcmsgcp'
+alias gacmsg='ltk_gacmsg'
+alias gacmsgcp='ltk_gacmsgcp'
+alias gacsp='ltk_gacsp'
+alias gacp='ltk_gacp'
+alias ggpushall='ltk_gitPushAll'
