@@ -130,3 +130,23 @@ alias sc-logs='journalctl -f -u'
 
 # Acme.sh
 alias acmeRenew=ltk_acme_renew_ssl
+
+# Git
+alias gtdall='git tag |xargs git tag -d'
+alias gct='git checkout test'
+alias gmt='git merge test'
+alias gmm='git merge master'
+alias gmd='git merge develop'
+alias ggpushmaster='git push origin $(git_main_branch)'
+alias gsa='git submodule add'
+alias gsui='git submodule update --init --recursive'
+alias gsurm='git submodule update --recursive --remote --merge'
+alias ggplsurm='git pull origin $(git_main_branch) && git submodule update --recursive --remote --merge'
+alias gcmsg='persi_gcmsg'
+alias gcmsgd='persi_gacmsgd'
+alias gcmsgcp='persi_gcmsgcp'
+alias gacmsg='persi_gacmsg'
+alias gacmsgcp='persi_gacmsgcp'
+alias gacsp='persi_gacsp'
+alias gacp='persi_gacp'
+alias ggpushall='persi_gitPushAll'
