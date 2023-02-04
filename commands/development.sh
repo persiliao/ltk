@@ -210,3 +210,6 @@ alias gacmsgcp='ltk_gacmsgcp'
 alias gacsp='ltk_gacsp'
 alias gacp='ltk_gacp'
 alias ggpushall='ltk_gitPushAll'
+
+# Java Maven
+alias mvndcpst='mvnd clean package -DskipTests'
