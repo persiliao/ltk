@@ -112,10 +112,10 @@ ltk_acme_renew_ssl() {
   "${HOME}"/.acme.sh/acme.sh --renew -d "${1}"
 }
 
-alias setUbuntuAptMirror=ltk_ubuntu_set_apt_mirror
-alias setNpmRegistry=ltk_npm_set_registry
-alias unsetNpmRegistry='npm config delete registry'
-alias showNpmRegistry='npm config get registry'
+alias ubuntuSetAptMirror=ltk_ubuntu_set_apt_mirror
+alias npmSetRegistry=ltk_npm_set_registry
+alias npmUnsetRegistry='npm config delete registry'
+alias npmGetRegistry='npm config get registry'
 alias pipUpgradeSelf='pip install --upgrade pip'
 
 # CI/CD
