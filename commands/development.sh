@@ -45,14 +45,14 @@ ltk_npm_set_registry() {
   esac
 
   printf 'Which registry do you want to set?
-    %st%s. https://mirrors.cloud.tencent.com/npm
-    %sa%s. https://registry.npm.taobao.org \n' \
+    %sq%s. https://mirrors.cloud.tencent.com/npm
+    %st%s. https://registry.npm.taobao.org \n' \
     "${FMT_YELLOW}" "${FMT_RESET}" "${FMT_YELLOW}" "${FMT_RESET}"
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
     t*|T*) npm config set registry https://registry.npm.taobao.org/ ;;
-    a*|A*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
+    q*|Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
     *) fmt_notice "Invalid choice. Set npm registry skipped."; return ;;
   esac
 
