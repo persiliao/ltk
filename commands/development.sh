@@ -51,8 +51,8 @@ ltk_npm_set_registry() {
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
-    t*|T*) npm config set registry https://registry.npmmirror.com ;;
-    q*|Q*) npm config set registry https://mirrors.cloud.tencent.com/npm ;;
+    t*|T*) npm config set registry https://registry.npmmirror.com/ ;;
+    q*|Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
     *) fmt_notice "Invalid choice. Set npm registry skipped."; return ;;
   esac
 
