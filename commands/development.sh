@@ -59,6 +59,35 @@ ltk_npm_set_registry() {
   fmt_information "npm registry set successfully."
 }
 
+ltk_composer_set_registry() {
+  if ! command_exists composer ; then
+    fmt_error "Please install the php & composer first."
+    return 1
+  fi
+
+  fmt_tips "Do you want to set composer registry? [Y/n] "
+  read -r opt
+  case $opt in
+  y*|Y*|"") ;;
+  n*|N*) fmt_notice "Set composer registry skipped."; return ;;
+  *) fmt_notice "Invalid choice. Set composer registry skipped."; return ;;
+  esac
+
+  printf 'Which registry do you want to set?
+    %sq%s. https://mirrors.tencent.com/composer/
+    %st%s. https://registry.npmmirror.com \n' \
+    "${FMT_YELLOW}" "${FMT_RESET}" "${FMT_YELLOW}" "${FMT_RESET}"
+  fmt_tips "Please input the correct option: "
+  read -r opt
+  case $opt in
+    t*|T*) composer config -g repos.packagist composer https://mirrors.aliyun.com/composer/ ;;
+    q*|Q*) composer config -g repos.packagist composer https://mirrors.tencent.com/composer/ ;;
+    *) fmt_notice "Invalid choice. Set composer registry skipped."; return ;;
+  esac
+
+  fmt_information "composer registry set successfully."
+}
+
 ltk_drone_check_server() {
   if ! command_exists drone; then
     fmt_error "Please install the drone cli first."
@@ -113,9 +142,17 @@ ltk_acme_renew_ssl() {
 }
 
 alias ubuntuSetAptMirror=ltk_ubuntu_set_apt_mirror
+
+# Node
 alias npmSetRegistry=ltk_npm_set_registry
 alias npmUnsetRegistry='npm config delete registry'
 alias npmGetRegistry='npm config get registry'
+
+# Composer registry
+alias composerSetRegistry=ltk_composer_set_registry
+alias composerUnsetRegistry='composer config --unset repos.packagist'
+
+# Python
 alias pipUpgradeSelf='pip install --upgrade pip'
 
 # CI/CD
