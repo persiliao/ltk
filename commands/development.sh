@@ -147,6 +147,7 @@ alias ubuntuSetAptMirror=ltk_ubuntu_set_apt_mirror
 alias npmSetRegistry=ltk_npm_set_registry
 alias npmUnsetRegistry='npm config delete registry'
 alias npmGetRegistry='npm config get registry'
+alias pnpmSetAutoInstallPeers='pnpm config set auto-install-peers true'
 
 # Composer registry
 alias composerSetRegistry=ltk_composer_set_registry
@@ -247,6 +248,8 @@ alias gacmsgcp='ltk_gacmsgcp'
 alias gacsp='ltk_gacsp'
 alias gacp='ltk_gacp'
 alias ggpushall='ltk_gitPushAll'
+alias gSetTrace='export GIT_TRACE=1'
+alias gUnsetTrace='unset GIT_TRACE'
 
 # Java Maven
 alias mvncpst='mvn clean package -DskipTests'
@@ -255,3 +258,7 @@ alias mvndcpst='mvnd clean package -DskipTests'
 # Rust
 alias rustOpenFullBacktrace='export RUST_BACKTRACE=full'
 alias rustCloseFullBacktrace='unset RUST_BACKTRACE'
+
+# Gpg
+export GPG_TTY=$(tty)
+alias gpgRestart='gpgconf --kill gpg-agent'
