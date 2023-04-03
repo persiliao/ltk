@@ -273,6 +273,7 @@ ltk_touch_gitignore() {
 
 # Git
 alias gtdall='git tag |xargs git tag -d'
+alias gcld1='git clone --depth=1 '
 alias gct='git checkout test'
 alias gmt='git merge test'
 alias gmm='git merge master'
