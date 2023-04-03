@@ -99,7 +99,7 @@ ltk_composer_set_registry() {
 
   printf 'Which registry do you want to set?
     %sq%s. https://mirrors.tencent.com/composer/
-    %st%s. https://registry.npmmirror.com \n' \
+    %st%s. https://mirrors.aliyun.com/composer/ \n' \
     "${FMT_YELLOW}" "${FMT_RESET}" "${FMT_YELLOW}" "${FMT_RESET}"
   fmt_tips "Please input the correct option: "
   read -r opt
@@ -184,7 +184,8 @@ alias pnpmSetAutoInstallPeers='pnpm config set auto-install-peers true'
 
 # Composer registry
 alias composerSetRegistry=ltk_composer_set_registry
-alias composerUnsetRegistry='composer config --unset repos.packagist'
+alias composerUnsetRegistry='composer config -g --unset repos.packagist'
+alias composerShowRegistry='composer config -g -l |grep repositories'
 
 # Python
 alias pipUpgradeSelf='pip install --upgrade pip'
