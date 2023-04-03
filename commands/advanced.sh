@@ -59,6 +59,15 @@ ltk_macos_enable_all_installation_sources() {
   fi
 }
 
+alias deleteAllSpace="sed -i '/^\s*$/d'"
+ltk_kill_by_port() {
+  if [ -z $1 ]; then
+    fmt_error "Please enter the port number."
+    exit 1
+  fi
+  $(lsof -i:$1 | awk '{print $2}' | tail -n 1 | xargs kill -9)
+}
+
 alias lg=ltk_lg
 alias pg=ltk_pg
 alias nsg=ltk_netsg
@@ -66,6 +75,7 @@ alias tczero='truncate -s 0'
 alias mailtcz='truncate -s 0 /var/mail/${USER}'
 alias showSystemVersion=ltk_system_version
 alias tf=ltk_tail
+alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
 
 # Proxy
