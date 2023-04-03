@@ -7,9 +7,15 @@ ltk_ubuntu_set_apt_mirror() {
   fmt_tips "Do you want to set apt mirror? [Y/n] "
   read -r opt
   case $opt in
-  y*|Y*|"") ;;
-  n*|N*) fmt_notice "Set apt mirror skipped."; return ;;
-  *) fmt_notice "Invalid choice. Set apt mirror skipped."; return ;;
+  y* | Y* | "") ;;
+  n* | N*)
+    fmt_notice "Set apt mirror skipped."
+    return
+    ;;
+  *)
+    fmt_notice "Invalid choice. Set apt mirror skipped."
+    return
+    ;;
   esac
 
   printf 'Which mirror do you want to set?
@@ -19,9 +25,12 @@ ltk_ubuntu_set_apt_mirror() {
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
-    t*|T*) sed -i s/archive.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list ;;
-    a*|A*) sed -i s/archive.ubuntu.com/mirrors.cloud.tencent.com/g /etc/apt/sources.list ;;
-    *) fmt_notice "Invalid choice. Set apt mirror skipped."; return ;;
+  t* | T*) sed -i s/archive.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list ;;
+  a* | A*) sed -i s/archive.ubuntu.com/mirrors.cloud.tencent.com/g /etc/apt/sources.list ;;
+  *)
+    fmt_notice "Invalid choice. Set apt mirror skipped."
+    return
+    ;;
   esac
 
   fmt_information "apt mirror set successfully, Now let's start updating"
@@ -31,7 +40,7 @@ ltk_ubuntu_set_apt_mirror() {
 }
 
 ltk_npm_set_registry() {
-  if ! command_exists npm ; then
+  if ! command_exists npm; then
     fmt_error "Please install the node & npm first."
     return 1
   fi
@@ -39,9 +48,15 @@ ltk_npm_set_registry() {
   fmt_tips "Do you want to set npm registry? [Y/n] "
   read -r opt
   case $opt in
-  y*|Y*|"") ;;
-  n*|N*) fmt_notice "Set npm registry skipped."; return ;;
-  *) fmt_notice "Invalid choice. Set npm registry skipped."; return ;;
+  y* | Y* | "") ;;
+  n* | N*)
+    fmt_notice "Set npm registry skipped."
+    return
+    ;;
+  *)
+    fmt_notice "Invalid choice. Set npm registry skipped."
+    return
+    ;;
   esac
 
   printf 'Which registry do you want to set?
@@ -51,16 +66,19 @@ ltk_npm_set_registry() {
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
-    t*|T*) npm config set registry https://registry.npmmirror.com/ ;;
-    q*|Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
-    *) fmt_notice "Invalid choice. Set npm registry skipped."; return ;;
+  t* | T*) npm config set registry https://registry.npmmirror.com/ ;;
+  q* | Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
+  *)
+    fmt_notice "Invalid choice. Set npm registry skipped."
+    return
+    ;;
   esac
 
   fmt_information "npm registry set successfully."
 }
 
 ltk_composer_set_registry() {
-  if ! command_exists composer ; then
+  if ! command_exists composer; then
     fmt_error "Please install the php & composer first."
     return 1
   fi
@@ -68,9 +86,15 @@ ltk_composer_set_registry() {
   fmt_tips "Do you want to set composer registry? [Y/n] "
   read -r opt
   case $opt in
-  y*|Y*|"") ;;
-  n*|N*) fmt_notice "Set composer registry skipped."; return ;;
-  *) fmt_notice "Invalid choice. Set composer registry skipped."; return ;;
+  y* | Y* | "") ;;
+  n* | N*)
+    fmt_notice "Set composer registry skipped."
+    return
+    ;;
+  *)
+    fmt_notice "Invalid choice. Set composer registry skipped."
+    return
+    ;;
   esac
 
   printf 'Which registry do you want to set?
@@ -80,9 +104,12 @@ ltk_composer_set_registry() {
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
-    t*|T*) composer config -g repos.packagist composer https://mirrors.aliyun.com/composer/ ;;
-    q*|Q*) composer config -g repos.packagist composer https://mirrors.tencent.com/composer/ ;;
-    *) fmt_notice "Invalid choice. Set composer registry skipped."; return ;;
+  t* | T*) composer config -g repos.packagist composer https://mirrors.aliyun.com/composer/ ;;
+  q* | Q*) composer config -g repos.packagist composer https://mirrors.tencent.com/composer/ ;;
+  *)
+    fmt_notice "Invalid choice. Set composer registry skipped."
+    return
+    ;;
   esac
 
   fmt_information "composer registry set successfully."
@@ -111,9 +138,15 @@ ltk_drone_sign_repository() {
   fmt_tips "Do you want to sign the current repository?[Y/n] "
   read -r opt
   case $opt in
-  y*|Y*|"") ;;
-  n*|N*) fmt_notice "Drone sign skipped."; return ;;
-  *) fmt_notice "Invalid choice. Drone sign skipped."; return ;;
+  y* | Y* | "") ;;
+  n* | N*)
+    fmt_notice "Drone sign skipped."
+    return
+    ;;
+  *)
+    fmt_notice "Invalid choice. Drone sign skipped."
+    return
+    ;;
   esac
 
   if drone sign --save "${LTK_GIT_REPO_NAME}" "${LTK_DRONE_REPO_CONFIG}"; then
@@ -124,8 +157,8 @@ ltk_drone_sign_repository() {
 # Acme.sh
 ltk_acme_renew_ssl() {
   if ! command_exists acme.sh; then
-      fmt_error "Please install the acme.sh first."
-      exit 1
+    fmt_error "Please install the acme.sh first."
+    exit 1
   fi
 
   if [ ! -f "${HOME}/.acme.sh/acme.sh" ]; then
@@ -171,62 +204,71 @@ alias acmeRenew=ltk_acme_renew_ssl
 
 # Git
 ltk_gacsp() {
-    local message=$1
-    if [[ -z ${message} ]]; then
-        fmt_error "Aborting commit due to empty commit message"
-        return
-    fi
-    local branch=$(git_current_branch)
-    git add . && git commit -m "${*}" && git pull origin "${branch}" && git submodule update --recursive --remote --merge && git add . && git commit -m "${*}" && git push origin "${branch}"
+  local message=$1
+  if [[ -z ${message} ]]; then
+    fmt_error "Aborting commit due to empty commit message"
+    return
+  fi
+  local branch=$(git_current_branch)
+  git add . && git commit -m "${*}" && git pull origin "${branch}" && git submodule update --recursive --remote --merge && git add . && git commit -m "${*}" && git push origin "${branch}"
 }
 
 ltk_gacp() {
-    local message=$1
-    if [ -z "${message}" ]; then
-        fmt_error "Aborting commit due to empty commit message"
-        return
-    fi
-    branch=$(git_current_branch)
-    git add . && git commit -m "${*}" && git pull origin "${branch}" && git push origin "${branch}"
+  local message=$1
+  if [ -z "${message}" ]; then
+    fmt_error "Aborting commit due to empty commit message"
+    return
+  fi
+  branch=$(git_current_branch)
+  git add . && git commit -m "${*}" && git pull origin "${branch}" && git push origin "${branch}"
 }
 
 ltk_gacmsg() {
-    local message=$1
-    if [ -z "${message}" ]; then
-        fmt_error "Aborting commit due to empty commit message"
-        return
-    fi
-    git add . && git commit -m "${*}"
+  local message=$1
+  if [ -z "${message}" ]; then
+    fmt_error "Aborting commit due to empty commit message"
+    return
+  fi
+  git add . && git commit -m "${*}"
 }
 
 ltk_gacmsgcp() {
-    git add . && git commit -m "refactor: Code optimization"
+  git add . && git commit -m "refactor: Code optimization"
 }
 
 ltk_gcmsg() {
-    local message=$1
-    if [ -z "${message}" ]; then
-        fmt_error "Aborting commit due to empty commit message"
-        return
-    fi
-    git commit -m "${*}"
+  local message=$1
+  if [ -z "${message}" ]; then
+    fmt_error "Aborting commit due to empty commit message"
+    return
+  fi
+  git commit -m "${*}"
 }
 
 ltk_gacmsgd() {
-    local message=$1
-    if [ -z "${message}" ]; then
-        fmt_error "Aborting commit due to empty commit message"
-        return
-    fi
-    git commit --amend -m "${*}"
+  local message=$1
+  if [ -z "${message}" ]; then
+    fmt_error "Aborting commit due to empty commit message"
+    return
+  fi
+  git commit --amend -m "${*}"
 }
 
 ltk_gcmsgcp() {
-    git commit -m "refactor: Code optimization"
+  git commit -m "refactor: Code optimization"
 }
 
 ltk_gitPushAll() {
-    git remote -v|grep push|awk '{print $1}'|xargs -t -n 1 git push
+  git remote -v | grep push | awk '{print $1}' | xargs -t -n 1 git push
+}
+
+ltk_touch_gitignore() {
+  local TEMPLATENAME=$1
+  if [ -z "${TEMPLATENAME}" ]; then
+    touch .gitignore
+  else
+    gi "${TEMPLATENAME}" >>.gitignore
+  fi
 }
 
 # Git
@@ -245,11 +287,13 @@ alias gcmsgd='ltk_gacmsgd'
 alias gcmsgcp='ltk_gcmsgcp'
 alias gacmsg='ltk_gacmsg'
 alias gacmsgcp='ltk_gacmsgcp'
+alias gacmsgpush='gacmsgcp && ggpush'
 alias gacsp='ltk_gacsp'
 alias gacp='ltk_gacp'
 alias ggpushall='ltk_gitPushAll'
 alias gSetTrace='export GIT_TRACE=1'
 alias gUnsetTrace='unset GIT_TRACE'
+alias ginew=ltk_touch_gitignore
 
 # Java Maven
 alias mvncpst='mvn clean package -DskipTests'
