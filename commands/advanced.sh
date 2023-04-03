@@ -52,18 +52,17 @@ ltk_unset_http_proxy() {
 ltk_macos_enable_all_installation_sources() {
   if [ "$(uname)" != "Darwin" ]; then
     fmt_error "The current system is not macOS."
-    exit 1
+    return 1
   fi
   if sudo spctl --master-disable; then
     fmt_information "Setting the mac Allows installation of any source software successfully."
   fi
 }
 
-alias deleteAllSpace="sed -i '/^\s*$/d'"
 ltk_kill_by_port() {
   if [ -z $1 ]; then
     fmt_error "Please enter the port number."
-    exit 1
+    return 1
   fi
   $(lsof -i:$1 | awk '{print $2}' | tail -n 1 | xargs kill -9)
 }
@@ -77,6 +76,7 @@ alias showSystemVersion=ltk_system_version
 alias tf=ltk_tail
 alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
+alias deleteAllSpace="sed -i '/^\s*$/d'"
 
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy

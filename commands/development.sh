@@ -10,11 +10,11 @@ ltk_ubuntu_set_apt_mirror() {
   y* | Y* | "") ;;
   n* | N*)
     fmt_notice "Set apt mirror skipped."
-    return
+    return 1
     ;;
   *)
     fmt_notice "Invalid choice. Set apt mirror skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -51,11 +51,11 @@ ltk_npm_set_registry() {
   y* | Y* | "") ;;
   n* | N*)
     fmt_notice "Set npm registry skipped."
-    return
+    return 1
     ;;
   *)
     fmt_notice "Invalid choice. Set npm registry skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -70,7 +70,7 @@ ltk_npm_set_registry() {
   q* | Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
   *)
     fmt_notice "Invalid choice. Set npm registry skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -89,11 +89,11 @@ ltk_composer_set_registry() {
   y* | Y* | "") ;;
   n* | N*)
     fmt_notice "Set composer registry skipped."
-    return
+    return 1
     ;;
   *)
     fmt_notice "Invalid choice. Set composer registry skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -108,7 +108,7 @@ ltk_composer_set_registry() {
   q* | Q*) composer config -g repos.packagist composer https://mirrors.tencent.com/composer/ ;;
   *)
     fmt_notice "Invalid choice. Set composer registry skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -118,11 +118,11 @@ ltk_composer_set_registry() {
 ltk_drone_check_server() {
   if ! command_exists drone; then
     fmt_error "Please install the drone cli first."
-    exit 1
+    return 1
   fi
   if [ -z "${DRONE_SERVER}" ] || [ -z "${DRONE_TOKEN}" ]; then
     fmt_error "You must provide the Drone server address. export DRONE_SERVER, DRONE_TOKEN"
-    exit 1
+    return 1
   fi
   return 0
 }
@@ -141,11 +141,11 @@ ltk_drone_sign_repository() {
   y* | Y* | "") ;;
   n* | N*)
     fmt_notice "Drone sign skipped."
-    return
+    return 1
     ;;
   *)
     fmt_notice "Invalid choice. Drone sign skipped."
-    return
+    return 1
     ;;
   esac
 
@@ -158,17 +158,17 @@ ltk_drone_sign_repository() {
 ltk_acme_renew_ssl() {
   if ! command_exists acme.sh; then
     fmt_error "Please install the acme.sh first."
-    exit 1
+    return 1
   fi
 
   if [ ! -f "${HOME}/.acme.sh/acme.sh" ]; then
     fmt_error "Please install the acme.sh first."
-    exit 1
+    return 1
   fi
 
   if [ -z "${1}" ]; then
     fmt_error "Please enter the domain name for which you want the certificate."
-    exit 1
+    return 1
   fi
 
   "${HOME}"/.acme.sh/acme.sh --renew -d "${1}"
@@ -284,6 +284,7 @@ alias gsa='git submodule add'
 alias gsui='git submodule update --init --recursive'
 alias gsurm='git submodule update --recursive --remote --merge'
 alias ggplsurm='git pull origin $(git_main_branch) && git submodule update --recursive --remote --merge'
+alias gcmdp='gcm && gmd && ggpush && gcd'
 alias gcmsg='ltk_gcmsg'
 alias gcmsgd='ltk_gacmsgd'
 alias gcmsgcp='ltk_gcmsgcp'
