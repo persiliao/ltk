@@ -249,4 +249,9 @@ alias gacp='ltk_gacp'
 alias ggpushall='ltk_gitPushAll'
 
 # Java Maven
+alias mvncpst='mvn clean package -DskipTests'
 alias mvndcpst='mvnd clean package -DskipTests'
+
+# Rust
+alias rustOpenFullBacktrace='export RUST_BACKTRACE=full'
+alias rustCloseFullBacktrace='unset RUST_BACKTRACE'
