@@ -445,9 +445,9 @@ EOF
 }
 
 setup_persizshtheme() {
-  
+
   echo "${FMT_BLUE}Cloning Persi Zsh Theme...${FMT_RESET}"
-  
+
   git clone -c core.eol=lf -c core.autocrlf=false \
   -c fsck.zeroPaddedFilemode=ignore \
   -c fetch.fsck.zeroPaddedFilemode=ignore \
@@ -456,10 +456,14 @@ setup_persizshtheme() {
     fmt_error "git clone of persi zsh theme repo failed"
     exit 1
   }
-  
+
   "${PERSI_WORKDIR}/install_persi.zsh"
-  
+
   echo
+}
+
+remove_persizshtheme() {
+  rm -rf "${PERSI_WORKDIR}"
 }
 
 # shellcheck disable=SC2183  # printf string has more %s than arguments ($FMT_RAINBOW expands to multiple arguments)
@@ -532,7 +536,8 @@ EOF
   setup_zshrc
   setup_shell
   setup_persizshtheme
-  
+  remove_persizshtheme
+
   print_success
 
   if [ $RUNZSH = no ]; then

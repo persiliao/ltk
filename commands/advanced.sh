@@ -66,6 +66,7 @@ alias tczero='truncate -s 0'
 alias mailtcz='truncate -s 0 /var/mail/${USER}'
 alias showSystemVersion=ltk_system_version
 alias tf=ltk_tail
+alias showPath='echo $PATH'
 
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy

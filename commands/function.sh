@@ -88,7 +88,7 @@ supports_hyperlinks() {
 
   # If $TERM_PROGRAM is set, these terminals support hyperlinks
   case "$TERM_PROGRAM" in
-  Hyper|iTerm.app|terminology|WezTerm) return 0 ;;
+  Hyper | iTerm.app | terminology | WezTerm) return 0 ;;
   esac
 
   # kitty supports hyperlinks
@@ -114,15 +114,15 @@ supports_hyperlinks() {
 # Source: https://gist.github.com/XVilka/8346728
 supports_truecolor() {
   case "$COLORTERM" in
-  truecolor|24bit) return 0 ;;
+  truecolor | 24bit) return 0 ;;
   esac
 
   case "$TERM" in
-  iterm           |\
-  tmux-truecolor  |\
-  linux-truecolor |\
-  xterm-truecolor |\
-  screen-truecolor) return 0 ;;
+  iterm | \
+    tmux-truecolor | \
+    linux-truecolor | \
+    xterm-truecolor | \
+    screen-truecolor) return 0 ;;
   esac
 
   return 1
@@ -137,7 +137,7 @@ fmt_link() {
 
   case "$3" in
   --text) printf '%s\n' "$1" ;;
-  --url|*) fmt_underline "$2" ;;
+  --url | *) fmt_underline "$2" ;;
   esac
 }
 
@@ -213,7 +213,7 @@ fmt_tips() {
 }
 
 ltk_sed_is_gnu() {
-  if sed --version | head -1 | grep -q -c GNU ; then
+  if sed --version | head -1 | grep -q -c GNU; then
     return 0
   else
     return 1
