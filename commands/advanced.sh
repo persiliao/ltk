@@ -59,7 +59,6 @@ ltk_macos_enable_all_installation_sources() {
   fi
 }
 
-alias deleteAllSpace="sed -i '/^\s*$/d'"
 ltk_kill_by_port() {
   if [ -z $1 ]; then
     fmt_error "Please enter the port number."
@@ -77,6 +76,7 @@ alias showSystemVersion=ltk_system_version
 alias tf=ltk_tail
 alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
+alias deleteAllSpace="sed -i '/^\s*$/d'"
 
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy
