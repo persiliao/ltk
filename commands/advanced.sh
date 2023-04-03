@@ -52,7 +52,7 @@ ltk_unset_http_proxy() {
 ltk_macos_enable_all_installation_sources() {
   if [ "$(uname)" != "Darwin" ]; then
     fmt_error "The current system is not macOS."
-    exit 1
+    return 1
   fi
   if sudo spctl --master-disable; then
     fmt_information "Setting the mac Allows installation of any source software successfully."
@@ -62,7 +62,7 @@ ltk_macos_enable_all_installation_sources() {
 ltk_kill_by_port() {
   if [ -z $1 ]; then
     fmt_error "Please enter the port number."
-    exit 1
+    return 1
   fi
   $(lsof -i:$1 | awk '{print $2}' | tail -n 1 | xargs kill -9)
 }
