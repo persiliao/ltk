@@ -69,6 +69,10 @@ setup_optimize_git_config() {
   git config --global core.fileMode false
   git config --global core.packedGitLimit 128m
   git config --global core.packedGitWindowSize 128m
+  git config --global core.quotepath false
+  git config --global gui.encoding utf-8
+  git config --global i18n.commit.encoding utf-8
+  git config --global i18n.logoutputencoding utf-8
   # pack
   git config --global pack.deltaCacheSize 128m
   git config --global pack.packSizeLimit 128m
@@ -90,7 +94,7 @@ setup_optimize_git_config() {
   else
       git config --global credential.helper store
   fi
-  fmt_information "Set up successfully."
+  fmt_information "Git configuration setup successfully."
 }
 
 main() {
