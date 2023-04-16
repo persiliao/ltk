@@ -91,8 +91,6 @@ setup_optimize_git_config() {
       git config --global credential.helper store
   fi
   fmt_information "Set up successfully."
-  fmt_information "git user.name: ${LTK_GIT_USER_NAME}"
-  fmt_information "git user.email: ${LTK_GIT_USER_EMAIL}"
 }
 
 main() {
