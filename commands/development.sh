@@ -294,6 +294,8 @@ alias gacmsgpush='gacmsgcp && ggpush'
 alias gacsp='ltk_gacsp'
 alias gacp='ltk_gacp'
 alias ggpushall='ltk_gitPushAll'
+alias grao='git remote add origin'
+alias grrmo='git remote add origin'
 alias gSetTrace='export GIT_TRACE=1'
 alias gUnsetTrace='unset GIT_TRACE'
 alias ginew=ltk_touch_gitignore
