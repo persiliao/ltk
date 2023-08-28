@@ -44,9 +44,21 @@ ltk_http_v2ray_proxy() {
   fmt_information "Setting the http proxy succeeded. 127.0.0.1:1087"
 }
 
+ltk_http_clashx_proxy() {
+  if ! netstat -an | grep -q -c 127.0.0.1.7890; then
+    fmt_error "ClashX does not appear to be started."
+    return 1
+  fi
+  export http_proxy=http://127.0.0.1:7890
+  export https_proxy=http://127.0.0.1:7890
+  export all_proxy=socks5://127.0.0.1:7890
+  fmt_information "Setting the http proxy succeeded. 127.0.0.1:7890"
+}
+
 ltk_unset_http_proxy() {
   unset http_proxy
   unset https_proxy
+  unset all_proxy
 }
 
 ltk_macos_enable_all_installation_sources() {
@@ -81,6 +93,7 @@ alias deleteAllSpace="sed -i '/^\s*$/d'"
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy
 alias unsetHttpProxy=ltk_unset_http_proxy
+alias setHttpClashXProxy=ltk_http_clashx_proxy
 
 # Mac
 alias macAppInstallSourceAll=ltk_macos_enable_all_installation_sources
