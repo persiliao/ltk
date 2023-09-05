@@ -33,7 +33,7 @@ done' >> "${HOME}/${rc}"
 
 setup_install_alias() {
   if ! [ -d "${HOME}/.ltk" ]; then
-    mkdir "${HOME}/.ltk"
+    mkdir -p "${HOME}/.ltk"
   fi
   if cp -r "${LTK_DIRECTORY}/commands" "${HOME}/.ltk"; then
     setup_install_alias_bootstrap
