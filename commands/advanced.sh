@@ -85,6 +85,7 @@ alias nsg=ltk_netsg
 alias tczero='truncate -s 0'
 alias mailtcz='truncate -s 0 /var/mail/${USER}'
 alias showSystemVersion=ltk_system_version
+alias showSystemReleaseVersion='lsb_release -a'
 alias tf=ltk_tail
 alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
