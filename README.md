@@ -1,5 +1,9 @@
 # Tools Kit
 
+[![Linux](https://img.shields.io/badge/Linux-ToolKit-blue.svg)](https://www.jetbrains.com/?from=persilia-ltk)
+[![](https://img.shields.io/npm/l/el-tree-transfer-pro)](https://github.com/persiliao/ltk/blob/master/LICENSE)
+[![使用IDEA开发维护](https://img.shields.io/badge/IDEA-提供支持-blue.svg)](https://www.jetbrains.com/?from=persilia-ltk)
+
 ## 初衷
 
 在工作中，经常需要对服务器进行相关的一些配置，于是写了这些常用的一些小工具。
@@ -46,3 +50,10 @@
 > 需要使用 `root` 用户执行
 
 * [x] 安装 `wp cli`
+
+## JetBrains Support
+
+**The project has always been developed in the Idea integrated development environment under JetBrains, based on the
+free JetBrains Open Source license(s) genuine free license, I would like to express my gratitude here**
+
+![Jetbrains](https://github.com/persiliao/static-resources/blob/master/jetbrains-logos/jetbrains-variant-4.svg)
