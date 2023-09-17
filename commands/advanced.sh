@@ -90,7 +90,7 @@ alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
 alias deleteAllSpace="sed -i '/^\s*$/d'"
 alias lsdu='ls|xargs du -sh|sort -hr'
-alias lsdu='ls|xargs du -sh|sort -hr|head -n 10'
+alias lsdu10='ls|xargs du -sh|sort -hr|head -n 10'
 alias lldu='ls -a -I "." -I ".."|xargs du -sh|sort -hr'
 alias lldu10='ls -a -I "." -I ".."|xargs du -sh|sort -hr|head -n 10'
 
