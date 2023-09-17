@@ -38,6 +38,7 @@ setup_install_alias() {
   if cp -r "${LTK_DIRECTORY}/commands" "${HOME}/.ltk"; then
     setup_install_alias_bootstrap
   fi
+  fmt_information "Secondary commands are installed successfully"
 }
 
 main() {
