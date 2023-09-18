@@ -457,7 +457,7 @@ setup_persizshtheme() {
     exit 1
   }
 
-  "${PERSI_WORKDIR}/install_persi.zsh"
+  "${PERSI_WORKDIR}/install.zsh"
 
   echo
 }
