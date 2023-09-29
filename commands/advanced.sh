@@ -76,7 +76,7 @@ ltk_kill_by_port() {
     fmt_error "Please enter the port number."
     return 1
   fi
-  $(lsof -i:$1 | awk '{print $2}' | tail -n 1 | xargs kill -9)
+  $(lsof -i:$1 | awk '{print $2}' | tail -n 1| xargs kill -15)
 }
 
 alias lg=ltk_lg
