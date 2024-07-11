@@ -79,6 +79,10 @@ ltk_kill_by_port() {
   $(lsof -i:$1 | awk '{print $2}' | tail -n 1| xargs kill -15)
 }
 
+ltk_show_all_listen() {
+  sudo lsof -i -P -n | grep LISTEN
+}
+
 alias lg=ltk_lg
 alias pg=ltk_pg
 alias nsg=ltk_netsg
@@ -94,6 +98,7 @@ alias lsdu='ls|xargs du -sh|sort -hr'
 alias lsdu10='ls|xargs du -sh|sort -hr|head -n 10'
 alias lldu='ls -a -I "." -I ".."|xargs du -sh|sort -hr'
 alias lldu10='ls -a -I "." -I ".."|xargs du -sh|sort -hr|head -n 10'
+alias showAllListen=ltk_show_all_listen
 
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy
