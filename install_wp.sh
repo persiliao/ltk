@@ -7,20 +7,9 @@
 # Project home page:
 #    https://github.com/persiliao/ltk
 
-cd "$(dirname "$0")" || {
-  fmt_error "You do not have permission to do this."
-  exit 1;
-}
-
 LTK_DIRECTORY="$(pwd)"
 
 . "${LTK_DIRECTORY}/bootstrap.sh"
-
-# Check if user is root
-if ! is_root; then
-  fmt_error "You must be ${FMT_GREEN}root${FMT_RESET} ${FMT_RED}to run this script.";
-  exit 1;
-fi
 
 setup_install_wp_cli() {
   if ! command_exists wp; then

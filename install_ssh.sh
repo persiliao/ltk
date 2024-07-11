@@ -17,10 +17,10 @@ LTK_DIRECTORY="$(pwd)"
 . "${LTK_DIRECTORY}/bootstrap.sh"
 
 # Check if user is root
-if ! is_root; then
-  fmt_error "You must be ${FMT_GREEN}root${FMT_RESET} ${FMT_RED}to run this script.";
-  exit 1;
-fi
+# if ! is_root; then
+#   fmt_error "You must be ${FMT_GREEN}root${FMT_RESET} ${FMT_RED}to run this script.";
+#   exit 1;
+# fi
 
 LTK_LOGIN_USER=$(id -u -n)
 
