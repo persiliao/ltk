@@ -83,6 +83,14 @@ ltk_show_all_listen() {
   sudo lsof -i -P -n | grep LISTEN
 }
 
+ltk_show_ipv4() {
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    ip -o -4 addr show | awk '{print $2, $4}' | grep -v 'lo' | sed 's/^\([^:]*\): /\1\t/' | sort -k 2 -n | column -t
+  elif [[ "$(uname -s)" == "Darwin" ]]; then
+    ifconfig | grep 'inet' | grep -v 'inet6' | grep -v '127.0.0.1' | awk '{print $1, $2}' | sed 's/:/ /' | sort -k 2 -n | column -t
+  fi
+}
+
 alias lg=ltk_lg
 alias pg=ltk_pg
 alias nsg=ltk_netsg
@@ -98,6 +106,7 @@ alias lsdu='ls|xargs du -sh|sort -hr'
 alias lsdu10='ls|xargs du -sh|sort -hr|head -n 10'
 alias lldu='ls -a -I "." -I ".."|xargs du -sh|sort -hr'
 alias lldu10='ls -a -I "." -I ".."|xargs du -sh|sort -hr|head -n 10'
+alias llipv4=ltk_show_ipv4
 alias showAllListen=ltk_show_all_listen
 
 # Proxy
