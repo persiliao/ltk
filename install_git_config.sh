@@ -31,7 +31,7 @@ setup_optimize_git_config() {
 
   if ! git config --global --get user.name > /dev/null; then
     while :; do
-      fmt_tips "Please enter the name used for git commit. (e: git@git.com): "
+      fmt_tips "Please enter the name used for git commit. (e: Persi.Liao): "
       read -r LTK_GIT_USER_NAME
       if [ "${LTK_GIT_USER_NAME}" != "" ]; then
         break
