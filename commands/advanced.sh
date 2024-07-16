@@ -80,7 +80,7 @@ ltk_kill_by_port() {
 }
 
 ltk_show_all_listen() {
-  sudo lsof -i -P -n | grep LISTEN
+  lsof -i -P -n | grep LISTEN | awk '{print $1, $2, $3, $8, $9}' | sort -k 1 -n | column -t
 }
 
 ltk_show_ipv4() {
@@ -95,7 +95,7 @@ alias lg=ltk_lg
 alias pg=ltk_pg
 alias nsg=ltk_netsg
 alias tczero='truncate -s 0'
-alias mailtcz='truncate -s 0 /var/mail/${USER}'
+alias tczmail='truncate -s 0 /var/mail/${USER}'
 alias showSystemVersion=ltk_system_version
 alias showSystemReleaseVersion='lsb_release -a'
 alias tf=ltk_tail
@@ -107,7 +107,7 @@ alias lsdu10='ls|xargs du -sh|sort -hr|head -n 10'
 alias lldu='ls -a -I "." -I ".."|xargs du -sh|sort -hr'
 alias lldu10='ls -a -I "." -I ".."|xargs du -sh|sort -hr|head -n 10'
 alias llipv4=ltk_show_ipv4
-alias showAllListen=ltk_show_all_listen
+alias llListen=ltk_show_all_listen
 
 # Proxy
 alias setHttpV2rayProxy=ltk_http_v2ray_proxy
