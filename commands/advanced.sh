@@ -9,7 +9,7 @@ ltk_pg() {
 }
 
 ltk_netsg() {
-  netstat -an | grep -i "$1"
+  netstat -an | grep -v grep | grep -i "$1"
 }
 
 ltk_system_version() {
