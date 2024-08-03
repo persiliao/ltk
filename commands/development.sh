@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ltk_ubuntu_set_apt_mirror() {
   if [ ! -s '/etc/apt/sources.list' ]; then
     fmt_error "Current OS system not a ubuntu."
@@ -60,14 +62,14 @@ ltk_npm_set_registry() {
   esac
 
   printf 'Which registry do you want to set?
-    %sq%s. https://mirrors.cloud.tencent.com/npm
-    %st%s. https://registry.npmmirror.com \n' \
+    %sqq%s. https://mirrors.cloud.tencent.com/npm
+    %saliyun%s. https://registry.npmmirror.com \n' \
     "${FMT_YELLOW}" "${FMT_RESET}" "${FMT_YELLOW}" "${FMT_RESET}"
   fmt_tips "Please input the correct option: "
   read -r opt
   case $opt in
-  t* | T*) npm config set registry https://registry.npmmirror.com/ ;;
-  q* | Q*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
+  t* | aliyun*) npm config set registry https://registry.npmmirror.com/ ;;
+  q* | qq*) npm config set registry https://mirrors.cloud.tencent.com/npm/ ;;
   *)
     fmt_notice "Invalid choice. Set npm registry skipped."
     return 1

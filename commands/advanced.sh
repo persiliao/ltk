@@ -1,15 +1,17 @@
+#!/bin/zsh
+
 ltk_lg() {
   # shellcheck disable=SC2010
-  ls | grep -i "$1"
+  ls | grep -v grep | grep -i "$1"
 }
 
 ltk_pg() {
   # shellcheck disable=SC2009
-  ps -ef | grep -i "$1"
+  ps -ef | grep -v grep | grep -i "$1"
 }
 
 ltk_netsg() {
-  netstat -an | grep -i "$1"
+  netstat -an | grep -v grep | grep -i "$1"
 }
 
 ltk_system_version() {
@@ -102,10 +104,12 @@ alias tf=ltk_tail
 alias killByPort=ltk_kill_by_port
 alias showPath='echo $PATH'
 alias deleteAllSpace="sed -i '/^\s*$/d'"
-alias lsdu='ls|xargs du -sh|sort -hr'
-alias lsdu10='ls|xargs du -sh|sort -hr|head -n 10'
-alias lldu='ls -a -I "." -I ".."|xargs du -sh|sort -hr'
-alias lldu10='ls -a -I "." -I ".."|xargs du -sh|sort -hr|head -n 10'
+alias lsdu='ls|xargs du -sh'
+alias lsdusr='ls|xargs du -sh|sort -hr'
+alias lsdusr10='ls|xargs du -sh|sort -hr|head -n 10'
+alias lldu='ls -A|xargs du -sh'
+alias lldusr='ls -A|xargs du -sh|sort -hr'
+alias lldusr10='ls -A|xargs du -sh|sort -hr|head -n 10'
 alias llipv4=ltk_show_ipv4
 alias llListen=ltk_show_all_listen
 
