@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ltk_ubuntu_set_apt_mirror() {
   if [ ! -s '/etc/apt/sources.list' ]; then
     fmt_error "Current OS system not a ubuntu."

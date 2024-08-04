@@ -18,17 +18,20 @@ LTK_DIRECTORY="$(pwd)"
 
 setup_install_alias_bootstrap() {
   # shellcheck disable=SC2010
-  for rc in $(ls -al "${HOME}" | grep "shrc$" | awk '{print $9}'); do
-    if ! grep -q -c ".ltk/commands" "${HOME}/${rc}"; then
+  for config_file in $(ls -al "${HOME}" | grep "shrc$" | awk '{print $9}'); do
+    if ! grep -q -c ".ltk/commands" "${HOME}/${config_file}"; then
       # shellcheck disable=SC2016
       echo '# Source ltk alias commands
 # shellcheck disable=SC2045
-for rc in $(ls "${HOME}/.ltk/commands") ; do
+for config_file in $(ls "${HOME}/.ltk/commands") ; do
   # shellcheck disable=SC1090
-  . "${HOME}/.ltk/commands/${rc}"
-done' >> "${HOME}/${rc}"
+  . "${HOME}/.ltk/commands/${config_file}"
+done
+unset config_file
+' >> "${HOME}/${config_file}"
     fi
   done
+  unset config_file
 }
 
 setup_install_alias() {

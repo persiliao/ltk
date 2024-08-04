@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ltk_lg() {
   # shellcheck disable=SC2010
   ls | grep -v grep | grep -i "$1"
