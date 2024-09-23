@@ -51,6 +51,14 @@
 
 * [x] 安装 `wp cli`
 
+#### generate_ssl_certificate.sh
+
+> 生成SSL证书
+
+```shell
+./generate_ssl_certificate.sh localhost
+```
+
 ## JetBrains Support
 
 **The project has always been developed in the Idea integrated development environment under JetBrains, based on the
