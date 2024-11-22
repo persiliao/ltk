@@ -1,12 +1,10 @@
 #!/bin/zsh
 
 ltk_lg() {
-  # shellcheck disable=SC2010
   ls | grep -v grep | grep -i "$1"
 }
 
 ltk_pg() {
-  # shellcheck disable=SC2009
   ps -ef | grep -v grep | grep -i "$1"
 }
 

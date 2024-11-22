@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Author:  Persi.Liao <xiangchu.liao AT gmail.com>
-#
+# Author: Persi.Liao <xiangchu.liao AT gmail.com>
 # Notes: Linux Took Kit
-#
-# Project home page:
-#    https://github.com/persiliao/ltk
+# Project home page: https://github.com/persiliao/ltk
 
 cd "$(dirname "$0")" || {
   fmt_error "You do not have permission to do this."
@@ -13,10 +10,35 @@ cd "$(dirname "$0")" || {
 }
 
 LTK_DIRECTORY="$(pwd)"
-
 . "${LTK_DIRECTORY}/bootstrap.sh"
 
-setup_optimize_git_config() {
+setup_git_user_name() {
+  while :; do
+    fmt_tips "Please enter the name used for git commit (e.g., Persi.Liao): "
+    read -r LTK_GIT_USER_NAME
+    if [ -n "${LTK_GIT_USER_NAME}" ]; then
+      git config --global user.name "${LTK_GIT_USER_NAME}"
+      break
+    else
+      fmt_error "Invalid name. Please try again."
+    fi
+  done
+}
+
+setup_git_user_email() {
+  while :; do
+    fmt_tips "Please enter the email address used for git commit (e.g., git@git.com): "
+    read -r LTK_GIT_USER_EMAIL
+    if validate_email "${LTK_GIT_USER_EMAIL}"; then
+      git config --global user.email "${LTK_GIT_USER_EMAIL}"
+      break
+    else
+      fmt_error "Invalid email address. Please try again."
+    fi
+  done
+}
+
+setup_git_config() {
   if ! command_exists git; then
     fmt_error "You haven't installed git yet."
     exit 1
@@ -26,44 +48,23 @@ setup_optimize_git_config() {
   read -r opt
   case $opt in
     y*|Y*|"") ;;
-    *) fmt_notice "Invalid choice. setting git configuration skipped."; return ;;
+    *) fmt_notice "Invalid choice. Setting git configuration skipped."; return ;;
   esac
 
+  # Setup user name
   if ! git config --global --get user.name > /dev/null; then
-    while :; do
-      fmt_tips "Please enter the name used for git commit. (e: Persi.Liao): "
-      read -r LTK_GIT_USER_NAME
-      if [ "${LTK_GIT_USER_NAME}" != "" ]; then
-        break
-      else
-        fmt_error "Invalid name."
-      fi
-    done
+    setup_git_user_name
   fi
 
+  # Setup user email
   if ! git config --global --get user.email > /dev/null; then
-    while :; do
-      fmt_tips "Please enter the email address used for git commit. (e: git@git.com): "
-      read -r LTK_GIT_USER_EMAIL
-      if validate_email "${LTK_GIT_USER_EMAIL}"; then
-        break
-      else
-        fmt_error "Invalid email address."
-      fi
-    done
+    setup_git_user_email
   fi
 
   fmt_notice "Begin setting up the git configuration..."
-  # user
-  if [ "${LTK_GIT_USER_NAME}" != "" ]; then
-    git config --global user.name "${LTK_GIT_USER_NAME}"
-  fi
 
-  if [ "${LTK_GIT_USER_EMAIL}" != "" ]; then
-    git config --global user.email "${LTK_GIT_USER_EMAIL}"
-  fi
+  # Core configurations
   git config --global init.defaultBranch master
-  # core
   git config --global core.eol lf
   git config --global core.autocrlf false
   git config --global core.fileMode false
@@ -73,32 +74,38 @@ setup_optimize_git_config() {
   git config --global gui.encoding utf-8
   git config --global i18n.commit.encoding utf-8
   git config --global i18n.logoutputencoding utf-8
-  # pack
+
+  # Pack configurations
   git config --global pack.deltaCacheSize 128m
   git config --global pack.packSizeLimit 128m
   git config --global pack.windowMemory 128m
-  # pull push
+
+  # Pull and push configurations
   git config --global pull.ff only
   git config --global pull.rebase true
   git config --global push.default simple
-  # http https
+
+  # HTTP and HTTPS settings
   git config --global http.postBuffer 128m
   git config --global https.postBuffer 128m
-  # other
+
+  # Other configurations
   git config --global fsck.zeroPaddedFilemode ignore
   git config --global fetch.fsck.zeroPaddedFilemode ignore
   git config --global receive.fsck.zeroPaddedFilemode ignore
-  # store
+
+  # Credential helper setup
   if is_mac; then
       git config --global credential.helper osxkeychain
   else
-      git config --global credential.helper store
+      git config --global credential.helper cache
   fi
+
   fmt_information "Git configuration setup successfully."
 }
 
 main() {
-  setup_optimize_git_config
+  setup_git_config
 }
 
 main
