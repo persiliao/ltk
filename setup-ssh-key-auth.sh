@@ -1,34 +1,34 @@
 #!/bin/zsh
 
-# 脚本: configure-ssh-key.sh
-# 功能: 为当前用户配置SSH公钥登录
-# 说明: 自动创建必要的目录和文件，确保配置成功
+# Script: configure-ssh-key.sh
+# Function: Configure SSH public key authentication for current user
+# Description: Automatically creates necessary directories and files, ensures configuration success
 
 __persiliao_set_strict_mode() {
-    # 设置严格模式
+    # Enable strict mode
     set -euo pipefail
 }
 
 __persiliao_show_header() {
-    # 显示脚本头信息
-    echo "=== SSH公钥配置脚本 ==="
-    echo "用户: $(whoami)"
-    echo "时间: $(date '+%Y-%m-%d %H:%M:%S')"
+    # Display script header
+    echo "=== SSH Public Key Configuration Script ==="
+    echo "User: $(whoami)"
+    echo "Time: $(date '+%Y-%m-%d %H:%M:%S')"
     echo ""
 }
 
 __persiliao_get_public_key_path() {
-    # 获取公钥文件路径
+    # Get public key file path
     local pub_key_path="$1"
 
     if [[ -z "$pub_key_path" ]] || [[ "$pub_key_path" == "--help" ]] || [[ "$pub_key_path" == "-h" ]]; then
-        echo "使用方法: $0 [公钥文件路径]"
+        echo "Usage: $0 [public_key_file_path]"
         echo ""
-        echo "示例:"
+        echo "Examples:"
         echo "  $0 /path/to/login.pub"
-        echo "  $0                         # 使用当前目录的 login.pub"
+        echo "  $0                         # Use login.pub in current directory"
         echo ""
-        echo "注意: 此脚本仅为当前用户 $(whoami) 配置SSH公钥登录"
+        echo "Note: This script only configures SSH public key for current user $(whoami)"
         exit 1
     fi
 
@@ -36,14 +36,14 @@ __persiliao_get_public_key_path() {
         if [[ -f "login.pub" ]]; then
             pub_key_path="login.pub"
         else
-            echo "错误: 未指定公钥文件且当前目录不存在 login.pub"
+            echo "Error: No public key file specified and login.pub not found in current directory"
             exit 1
         fi
     fi
 
-    # 解析路径
+    # Resolve path
     if [[ ! -f "$pub_key_path" ]]; then
-        echo "错误: 公钥文件不存在: $pub_key_path"
+        echo "Error: Public key file does not exist: $pub_key_path"
         exit 1
     fi
 
@@ -51,53 +51,53 @@ __persiliao_get_public_key_path() {
 }
 
 __persiliao_validate_public_key() {
-    # 验证公钥格式
+    # Validate public key format
     local pub_key_path="$1"
     local pub_key_content=""
 
-    echo "验证公钥文件: $pub_key_path"
+    echo "Validating public key file: $pub_key_path"
 
-    # 读取文件内容
+    # Read file content
     pub_key_content=$(cat "$pub_key_path" 2>/dev/null | tr -d '\r\n' | sed 's/[[:space:]]*$//')
 
     if [[ -z "$pub_key_content" ]]; then
-        echo "错误: 公钥文件内容为空"
+        echo "Error: Public key file is empty"
         exit 1
     fi
 
-    # 验证基本SSH公钥格式
+    # Validate SSH public key format
     if ! echo "$pub_key_content" | grep -q -E "^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521)|ssh-ed25519-cert-v01@openssh\.com)"; then
-        echo "错误: 无效的SSH公钥格式"
-        echo "支持的格式: ssh-rsa, ssh-dss, ssh-ed25519, ecdsa-sha2-nistp256/384/521"
+        echo "Error: Invalid SSH public key format"
+        echo "Supported formats: ssh-rsa, ssh-dss, ssh-ed25519, ecdsa-sha2-nistp256/384/521"
         echo ""
-        echo "文件内容前100字符:"
+        echo "First 100 characters of file content:"
         echo "$pub_key_content" | cut -c 1-100
         exit 1
     fi
 
-    echo "✓ 公钥格式验证通过"
-    echo "  密钥类型: $(echo "$pub_key_content" | awk '{print $1}')"
-    echo "  密钥长度: $(echo -n "$pub_key_content" | wc -c | awk '{print $1}') 字符"
+    echo "✓ Public key format validated"
+    echo "  Key type: $(echo "$pub_key_content" | awk '{print $1}')"
+    echo "  Key length: $(echo -n "$pub_key_content" | wc -c | awk '{print $1}') characters"
     echo ""
 
     echo "$pub_key_content"
 }
 
 __persiliao_create_ssh_directory() {
-    # 创建.ssh目录并设置权限
+    # Create .ssh directory and set permissions
     local ssh_dir="$HOME/.ssh"
 
-    echo "配置SSH目录: $ssh_dir"
+    echo "Configuring SSH directory: $ssh_dir"
 
     if [[ ! -d "$ssh_dir" ]]; then
-        echo "创建.ssh目录..."
+        echo "Creating .ssh directory..."
         mkdir -p "$ssh_dir"
-        echo "✓ 目录已创建"
+        echo "✓ Directory created"
     else
-        echo "✓ 目录已存在"
+        echo "✓ Directory exists"
     fi
 
-    # 确保目录权限正确
+    # Ensure correct directory permissions
     local current_perm=""
     if [[ $(uname) == "Darwin" ]]; then
         current_perm=$(stat -f "%A" "$ssh_dir" 2>/dev/null || echo "755")
@@ -106,10 +106,10 @@ __persiliao_create_ssh_directory() {
     fi
 
     if [[ "$current_perm" != "700" ]] && [[ "$current_perm" != "750" ]] && [[ "$current_perm" != "755" ]]; then
-        echo "更新目录权限: 0700"
+        echo "Updating directory permissions: 0700"
         chmod 700 "$ssh_dir"
     else
-        echo "✓ 目录权限正确: $current_perm"
+        echo "✓ Directory permissions correct: $current_perm"
     fi
 
     echo ""
@@ -117,23 +117,23 @@ __persiliao_create_ssh_directory() {
 }
 
 __persiliao_create_authorized_keys_file() {
-    # 创建authorized_keys文件
+    # Create authorized_keys file
     local auth_keys_file="$HOME/.ssh/authorized_keys"
 
-    echo "配置authorized_keys文件: $auth_keys_file"
+    echo "Configuring authorized_keys file: $auth_keys_file"
 
     if [[ ! -f "$auth_keys_file" ]]; then
-        echo "创建authorized_keys文件..."
+        echo "Creating authorized_keys file..."
         touch "$auth_keys_file"
         echo "# SSH Authorized Keys for $(whoami)" > "$auth_keys_file"
         echo "# Created: $(date '+%Y-%m-%d %H:%M:%S')" >> "$auth_keys_file"
         echo "" >> "$auth_keys_file"
-        echo "✓ 文件已创建"
+        echo "✓ File created"
     else
-        echo "✓ 文件已存在"
+        echo "✓ File exists"
     fi
 
-    # 确保文件权限正确
+    # Ensure correct file permissions
     local current_perm=""
     if [[ $(uname) == "Darwin" ]]; then
         current_perm=$(stat -f "%A" "$auth_keys_file" 2>/dev/null || echo "644")
@@ -142,10 +142,10 @@ __persiliao_create_authorized_keys_file() {
     fi
 
     if [[ "$current_perm" != "600" ]] && [[ "$current_perm" != "644" ]]; then
-        echo "更新文件权限: 0600"
+        echo "Updating file permissions: 0600"
         chmod 600 "$auth_keys_file"
     else
-        echo "✓ 文件权限正确: $current_perm"
+        echo "✓ File permissions correct: $current_perm"
     fi
 
     echo ""
@@ -153,38 +153,38 @@ __persiliao_create_authorized_keys_file() {
 }
 
 __persiliao_backup_existing_keys() {
-    # 备份现有的authorized_keys文件
+    # Backup existing authorized_keys file
     local auth_keys_file="$1"
 
     if [[ ! -f "$auth_keys_file" ]]; then
         return 0
     fi
 
-    # 检查文件是否有内容（排除注释和空行）
+    # Check if file has content (excluding comments and empty lines)
     local key_count=$(grep -v "^#" "$auth_keys_file" | grep -v "^$" | wc -l | awk '{print $1}')
 
     if [[ $key_count -eq 0 ]]; then
-        echo "ℹ️  文件为空，无需备份"
+        echo "ℹ️  File is empty, no backup needed"
         return 0
     fi
 
     local timestamp=$(date +%Y%m%d_%H%M%S)
     local backup_file="${auth_keys_file}.backup.${timestamp}"
 
-    echo "备份现有配置..."
+    echo "Backing up existing configuration..."
     cp "$auth_keys_file" "$backup_file"
     chmod 600 "$backup_file"
 
-    echo "✓ 备份完成: $backup_file"
-    echo "  备份包含 $key_count 个有效密钥"
+    echo "✓ Backup completed: $backup_file"
+    echo "  Backup contains $key_count valid keys"
     echo ""
 
-    # 清理旧备份
+    # Clean up old backups
     __persiliao_cleanup_old_backups "$auth_keys_file"
 }
 
 __persiliao_cleanup_old_backups() {
-    # 清理旧的备份文件，保留最近5个
+    # Clean up old backup files, keep latest 5
     local auth_keys_file="$1"
     local backup_dir=$(dirname "$auth_keys_file")
     local base_name=$(basename "$auth_keys_file")
@@ -193,18 +193,18 @@ __persiliao_cleanup_old_backups() {
     local backup_count=${#backup_files[@]}
 
     if [[ $backup_count -gt 5 ]]; then
-        echo "清理旧备份文件..."
+        echo "Cleaning up old backup files..."
         for ((i=5; i<backup_count; i++)); do
-            echo "  删除: ${backup_files[$i]}"
+            echo "  Deleting: ${backup_files[$i]}"
             rm -f "${backup_files[$i]}"
         done
-        echo "✓ 保留最近5个备份"
+        echo "✓ Keeping latest 5 backups"
         echo ""
     fi
 }
 
 __persiliao_check_key_exists() {
-    # 检查密钥是否已存在
+    # Check if key already exists
     local auth_keys_file="$1"
     local new_key="$2"
 
@@ -212,13 +212,13 @@ __persiliao_check_key_exists() {
         return 1
     fi
 
-    echo "检查密钥是否已存在..."
+    echo "Checking if key already exists..."
 
-    # 使用多种方法检查
+    # Use multiple methods to check
     local temp_file=$(mktemp)
     echo "$new_key" > "$temp_file"
 
-    # 方法1: 使用ssh-keygen检查指纹
+    # Method 1: Check fingerprint using ssh-keygen
     if command -v ssh-keygen >/dev/null 2>&1; then
         local new_fingerprint=$(ssh-keygen -lf "$temp_file" 2>/dev/null | awk 'NR==1{print $2}')
 
@@ -232,7 +232,7 @@ __persiliao_check_key_exists() {
 
                     if [[ "$line_fingerprint" == "$new_fingerprint" ]]; then
                         rm -f "$temp_file"
-                        echo "✓ 发现相同指纹的密钥已存在"
+                        echo "✓ Key with same fingerprint already exists"
                         return 0
                     fi
                 fi
@@ -240,7 +240,7 @@ __persiliao_check_key_exists() {
         fi
     fi
 
-    # 方法2: 直接比较密钥内容
+    # Method 2: Direct key content comparison
     local clean_new_key=$(echo "$new_key" | tr -d ' ' | tr -d '\n' | tr -d '\r')
 
     while IFS= read -r line; do
@@ -248,54 +248,54 @@ __persiliao_check_key_exists() {
             local clean_line=$(echo "$line" | tr -d ' ' | tr -d '\n' | tr -d '\r')
             if [[ "$clean_line" == "$clean_new_key" ]]; then
                 rm -f "$temp_file"
-                echo "✓ 发现完全相同的密钥已存在"
+                echo "✓ Exactly identical key already exists"
                 return 0
             fi
         fi
     done < "$auth_keys_file"
 
     rm -f "$temp_file"
-    echo "✓ 密钥不存在，可以添加"
+    echo "✓ Key not found, can be added"
     return 1
 }
 
 __persiliao_add_public_key() {
-    # 添加公钥到authorized_keys
+    # Add public key to authorized_keys
     local auth_keys_file="$1"
     local pub_key_content="$2"
 
-    echo "添加公钥到authorized_keys..."
+    echo "Adding public key to authorized_keys..."
 
-    # 检查是否需要添加注释
+    # Check if comment is needed
     local key_comment=$(echo "$pub_key_content" | awk '{$1=$2=""; print $0}' | xargs)
     if [[ -z "$key_comment" ]]; then
         key_comment="added-by-script-$(date +%Y%m%d)"
     fi
 
-    # 添加密钥
+    # Add the key
     echo "# $(date '+%Y-%m-%d %H:%M:%S'): $key_comment" >> "$auth_keys_file"
     echo "$pub_key_content" >> "$auth_keys_file"
     echo "" >> "$auth_keys_file"
 
-    echo "✓ 公钥已添加"
-    echo "  注释: $key_comment"
+    echo "✓ Public key added"
+    echo "  Comment: $key_comment"
     echo ""
 }
 
 __persiliao_verify_configuration() {
-    # 验证配置
+    # Verify configuration
     local auth_keys_file="$1"
     local pub_key_content="$2"
 
-    echo "验证配置..."
+    echo "Verifying configuration..."
 
-    # 检查文件是否存在
+    # Check if file exists
     if [[ ! -f "$auth_keys_file" ]]; then
-        echo "错误: authorized_keys文件不存在"
+        echo "Error: authorized_keys file does not exist"
         return 1
     fi
 
-    # 检查权限
+    # Check permissions
     local file_perm=""
     if [[ $(uname) == "Darwin" ]]; then
         file_perm=$(stat -f "%A" "$auth_keys_file" 2>/dev/null || echo "")
@@ -304,66 +304,66 @@ __persiliao_verify_configuration() {
     fi
 
     if [[ "$file_perm" != "600" ]] && [[ "$file_perm" != "644" ]]; then
-        echo "警告: 文件权限可能不正确: $file_perm (应为600或644)"
+        echo "Warning: File permissions may be incorrect: $file_perm (should be 600 or 644)"
     else
-        echo "✓ 文件权限正确: $file_perm"
+        echo "✓ File permissions correct: $file_perm"
     fi
 
-    # 检查密钥是否成功添加
+    # Check if key was successfully added
     if grep -q -F "$pub_key_content" "$auth_keys_file"; then
-        echo "✓ 密钥已成功添加到文件"
+        echo "✓ Key successfully added to file"
     else
-        echo "错误: 密钥未找到在文件中"
+        echo "Error: Key not found in file"
         return 1
     fi
 
-    # 统计密钥数量
+    # Count keys
     local key_count=$(grep -v "^#" "$auth_keys_file" | grep -v "^$" | grep -c "ssh-" || echo "0")
-    echo "✓ 文件中共有 $key_count 个SSH密钥"
+    echo "✓ File contains $key_count SSH keys"
     echo ""
 
     return 0
 }
 
 __persiliao_generate_test_commands() {
-    # 生成测试命令
+    # Generate test commands
     local current_user=$(whoami)
     local auth_keys_file="$HOME/.ssh/authorized_keys"
 
-    echo "=== 配置完成 ==="
+    echo "=== Configuration Complete ==="
     echo ""
-    echo "✅ SSH公钥配置成功！"
+    echo "✅ SSH public key configuration successful!"
     echo ""
 
-    # 显示文件信息
-    echo "配置信息:"
-    echo "  └─ 用户: $current_user"
-    echo "  └─ 配置文件: $auth_keys_file"
+    # Display file information
+    echo "Configuration information:"
+    echo "  └─ User: $current_user"
+    echo "  └─ Config file: $auth_keys_file"
 
     if [[ $(uname) == "Darwin" ]]; then
-        echo "  └─ 文件大小: $(stat -f%z "$auth_keys_file" 2>/dev/null || echo "N/A") 字节"
+        echo "  └─ File size: $(stat -f%z "$auth_keys_file" 2>/dev/null || echo "N/A") bytes"
     else
-        echo "  └─ 文件大小: $(stat -c%s "$auth_keys_file" 2>/dev/null || echo "N/A") 字节"
+        echo "  └─ File size: $(stat -c%s "$auth_keys_file" 2>/dev/null || echo "N/A") bytes"
     fi
 
     echo ""
-    echo "测试连接:"
+    echo "Test connection commands:"
     echo ""
 
-    # 生成测试命令
+    # Generate test commands
     if command -v hostname >/dev/null 2>&1; then
         local hostname_str=$(hostname)
-        echo "1. 本地测试:"
+        echo "1. Local test:"
         echo "   ssh ${current_user}@${hostname_str}"
         echo ""
     fi
 
-    echo "2. 通用测试命令:"
+    echo "2. General test command:"
     echo "   ssh ${current_user}@localhost"
     echo ""
 
-    # 获取IP地址
-    echo "3. 网络连接测试:"
+    # Get IP addresses
+    echo "3. Network connection test:"
     if [[ $(uname) == "Darwin" ]]; then
         # macOS
         local ip_addresses=$(ifconfig 2>/dev/null | grep -E "inet (192\.168|10\.|172\.)" | awk '{print $2}' | grep -v "127.0.0.1" | head -3)
@@ -377,51 +377,51 @@ __persiliao_generate_test_commands() {
             echo "   ssh ${current_user}@${ip}"
         done
     else
-        echo "   ssh ${current_user}@<服务器IP地址>"
+        echo "   ssh ${current_user}@<server_ip_address>"
     fi
 
     echo ""
-    echo "4. 快速测试:"
-    echo "   ssh -o ConnectTimeout=5 ${current_user}@localhost 'echo ✅ SSH连接成功'"
+    echo "4. Quick test:"
+    echo "   ssh -o ConnectTimeout=5 ${current_user}@localhost 'echo ✅ SSH connection successful'"
     echo ""
 
-    echo "5. 验证命令:"
+    echo "5. Verification commands:"
     echo "   ls -la ~/.ssh/authorized_keys"
     echo "   tail -5 ~/.ssh/authorized_keys"
     echo ""
 
-    echo "注意: 如果连接失败，请确保服务器SSH服务已启用公钥认证"
-    echo "      检查: grep 'PubkeyAuthentication yes' /etc/ssh/sshd_config"
+    echo "Note: If connection fails, ensure SSH server has public key authentication enabled"
+    echo "      Check: grep 'PubkeyAuthentication yes' /etc/ssh/sshd_config"
     echo ""
-    echo "备份文件: ${auth_keys_file}.backup.*"
+    echo "Backup files: ${auth_keys_file}.backup.*"
 }
 
 __persiliao_check_ssh_service_status() {
-    # 检查SSH服务状态（仅显示信息，不修改）
+    # Check SSH service status (display only, no modifications)
     echo ""
-    echo "SSH服务状态检查:"
+    echo "SSH service status check:"
 
     if [[ $(uname) == "Darwin" ]]; then
         # macOS
-        local ssh_status=$(sudo launchctl list 2>/dev/null | grep -i ssh || echo "未知")
-        echo "  macOS SSH服务: $ssh_status"
+        local ssh_status=$(sudo launchctl list 2>/dev/null | grep -i ssh || echo "Unknown")
+        echo "  macOS SSH service: $ssh_status"
     else
         # Linux
         if command -v systemctl >/dev/null 2>&1; then
             systemctl status sshd --no-pager 2>/dev/null | head -3 | grep -E "(active|inactive)" || \
             systemctl status ssh --no-pager 2>/dev/null | head -3 | grep -E "(active|inactive)" || \
-            echo "  SSH服务状态: 无法获取"
+            echo "  SSH service status: Unable to determine"
         elif command -v service >/dev/null 2>&1; then
             service sshd status 2>/dev/null | head -3 || \
             service ssh status 2>/dev/null | head -3 || \
-            echo "  SSH服务状态: 无法获取"
+            echo "  SSH service status: Unable to determine"
         fi
     fi
     echo ""
 }
 
 __persiliao_main() {
-    # 主函数
+    # Main function
     __persiliao_set_strict_mode
     __persiliao_show_header
 
@@ -429,49 +429,49 @@ __persiliao_main() {
     local pub_key_content=""
     local auth_keys_file="$HOME/.ssh/authorized_keys"
 
-    # 获取公钥文件路径
+    # Get public key file path
     if [[ $# -eq 1 ]]; then
         pub_key_path="$1"
     fi
 
     pub_key_path=$(__persiliao_get_public_key_path "$pub_key_path")
 
-    # 验证公钥
+    # Validate public key
     pub_key_content=$(__persiliao_validate_public_key "$pub_key_path")
 
-    # 创建.ssh目录
+    # Create .ssh directory
     __persiliao_create_ssh_directory > /dev/null
 
-    # 备份现有密钥
+    # Backup existing keys
     __persiliao_backup_existing_keys "$auth_keys_file"
 
-    # 创建authorized_keys文件
+    # Create authorized_keys file
     __persiliao_create_authorized_keys_file > /dev/null
 
-    # 检查密钥是否已存在
+    # Check if key already exists
     if __persiliao_check_key_exists "$auth_keys_file" "$pub_key_content"; then
-        echo "ℹ️  此公钥已存在于配置中，无需重复添加"
+        echo "ℹ️  This public key already exists in configuration, no need to add again"
         __persiliao_generate_test_commands
         exit 0
     fi
 
-    # 添加公钥
+    # Add public key
     __persiliao_add_public_key "$auth_keys_file" "$pub_key_content"
 
-    # 验证配置
+    # Verify configuration
     if ! __persiliao_verify_configuration "$auth_keys_file" "$pub_key_content"; then
-        echo "错误: 配置验证失败"
+        echo "Error: Configuration verification failed"
         exit 1
     fi
 
-    # 生成测试命令
+    # Generate test commands
     __persiliao_generate_test_commands
 
-    # 检查SSH服务状态
+    # Check SSH service status
     __persiliao_check_ssh_service_status
 
-    echo "✅ 配置完成！"
+    echo "✅ Configuration completed successfully!"
 }
 
-# 运行主函数
+# Run main function
 __persiliao_main "$@"
