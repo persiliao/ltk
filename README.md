@@ -37,49 +37,6 @@ ltk/
 └── README.md                  # This document
 ```
 
-## ⚙️ Installation & Usage
-
-### Prerequisites
-
-- **Shell**: Bash or Zsh
-- **Git**: For cloning the repository
-- **sudo privileges**: Required for system-level installations (e.g., Oh My Zsh)
-
-### Quick Start
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/persiliao/ltk.git
-   cd ltk
-   ```
-
-2. **Make scripts executable**:
-   ```bash
-   chmod +x *.sh
-   ```
-
-3. **Run the desired script**:
-   - **Install Oh My Zsh**:
-     ```bash
-     ./install_omz.sh
-     ```
-   - **Set up Oh My Zsh plugins**:
-     ```bash
-     ./omz_plugin_setup.sh
-     ```
-   - **Set up SSH key authentication**:
-     ```bash
-     ./setup_ssh_key_auth.sh
-     ```
-   - **Check system ports**:
-     ```bash
-     ./ports.sh
-     ```
-   - **Check Docker ports**:
-     ```bash
-     ./docker_ports.sh
-     ```
-
 ## 📜 Script Details
 
 ### `install_omz.sh`
