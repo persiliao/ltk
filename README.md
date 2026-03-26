@@ -9,26 +9,32 @@ A collection of shell scripts and tools for automating development environment s
 
 This repository contains a set of utility scripts designed to streamline the setup and management of development environments. The tools are primarily written in Shell (Bash/Zsh) and aim to automate repetitive tasks such as terminal customization, SSH key management, and system diagnostics.
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Oh My Zsh Integration**: Automated installation and configuration of Oh My Zsh with custom plugins and themes.
-- **SSH Key Management**: Scripts to generate SSH key pairs and configure authentication for remote servers.
-- **System Utilities**: Tools for checking system ports, Docker container status, and network configurations.
-- **Development Environment Setup**: Scripts to install and configure common development tools and dependencies.
+* 🔧 One-click Environment Setup: Automated installation and configuration of Oh My Zsh and its popular plugins.
+* 🔐 SSH/GPG Key Management: Securely generate and diagnose SSH/GPG keys, simplifying server authentication.
+* 🐳 Container & System Diagnostics: Quick checks for system port usage, Docker container status, and network configuration.
+* 🤖 CI/CD Integration Tools: Includes a Gitea Act Runner manager for self-hosted CI environments.
+* 🛡️ Built-in Quality Gates: Provides out-of-the-box Git hooks and GitHub Actions workflows to ensure script quality.
+
 
 ## 📁 Project Structure
 
 ```
 ltk/
-├── install_omz.sh          # Script to install Oh My Zsh
-├── omz_plugin_setup.sh     # Script to set up Oh My Zsh plugins
-├── setup_ssh_key_auth.sh   # Script to set up SSH key authentication
-├── ports.sh                # Utility to check system port usage
-├── docker_ports.sh         # Utility to check Docker container ports
-├── .editorconfig           # Editor configuration for consistent coding style
-├── .gitignore              # Git ignore rules
-├── LICENSE                 # MIT License
-└── README.md               # This file
+├── scripts/                   # Core utility scripts
+│   ├── install_omz.sh         # Installs Oh My Zsh
+│   ├── omz_plugin_setup.zsh   # Configures Zsh plugins and themes
+│   ├── setup_ssh_key_auth.zsh # Sets up SSH key authentication
+│   ├── diagnose-gpg.sh        # GPG key diagnostic tool
+│   ├── act_runner_manager.zsh # Gitea Act Runner manager
+│   ├── ports.sh               # Checks system port usage
+│   └── docker_ports.sh        # Checks Docker container ports
+├── .gitignore                 # Git ignore rules
+├── .editorconfig              # Editor style unification
+├── .shellcheckrc              # ShellCheck static analysis config (Recommended)
+├── LICENSE                    # MIT License
+└── README.md                  # This document
 ```
 
 ## ⚙️ Installation & Usage
