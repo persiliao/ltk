@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -e  # Exit immediately if any command returns a non-zero status
+set -e  # Exit immediately if any command returns a non-zero status
 
 # Color definitions
 RED='\033[0;31m'
@@ -251,9 +251,16 @@ if [ "$USE_CHINA_MIRROR" = true ]; then
     if [ -d "$INSTALL_DIR/Library/Taps/homebrew/homebrew-core" ]; then
         cd "$INSTALL_DIR/Library/Taps/homebrew/homebrew-core"
         git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+    else
+        # Create core tap directory
+        mkdir -p "$INSTALL_DIR/Library/Taps/homebrew"
+        cd "$INSTALL_DIR/Library/Taps/homebrew"
+        git clone https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
     fi
 
     # Set environment variables for bottle mirrors
+    echo "" >> "$SHELL_RC"
+    echo "# Homebrew China Mirrors" >> "$SHELL_RC"
     echo "export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles" >> "$SHELL_RC"
     echo "export HOMEBREW_CORE_GIT_REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git" >> "$SHELL_RC"
     echo "export HOMEBREW_BREW_GIT_REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git" >> "$SHELL_RC"
@@ -295,34 +302,42 @@ else
 fi
 
 log_step "9. Display Configuration Summary"
-echo -e "${CYAN}"
-echo "╔══════════════════════════════════════════════════════════════════╗"
-echo "║                  Homebrew Installation Complete                  ║"
-echo "╠══════════════════════════════════════════════════════════════════╣"
-echo "║ Configuration Summary:                                           ║"
-echo "║                                                                  ║"
-echo "║  • Homebrew Version: $(printf '%-20s' "$(echo "$BREW_VERSION" | head -1)")"
-echo "║  • Install Location: $INSTALL_DIR"
-echo "║  • Current User: $USER"
-echo "║  • Shell: $SHELL_NAME"
-echo "║  • Using China Mirror: $([ "$USE_CHINA_MIRROR" = true ] && echo -e "${GREEN}Yes${CYAN}" || echo -e "${YELLOW}No${CYAN}")"
-echo "║                                                                  ║"
+
+# 修复颜色显示问题 - 使用多个 echo 语句而不是 heredoc
+echo ""
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║                  Homebrew Installation Complete                  ║${NC}"
+echo -e "${CYAN}╠══════════════════════════════════════════════════════════════════╣${NC}"
+echo -e "${CYAN}║ Configuration Summary:                                           ║${NC}"
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║  • Homebrew Version: $(printf '%-20s' "$(echo "$BREW_VERSION" | head -1)")${NC}"
+echo -e "${CYAN}║  • Install Location: $INSTALL_DIR${NC}"
+echo -e "${CYAN}║  • Current User: $USER${NC}"
+echo -e "${CYAN}║  • Shell: $SHELL_NAME${NC}"
+
 if [ "$USE_CHINA_MIRROR" = true ]; then
-    echo "║ China Mirror Configuration:                                    ║"
-    echo "║  • Repo: Tsinghua Tuna mirror                               ║"
-    echo "║  • Bottles: https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles ║"
+    echo -e "${CYAN}║  • Using China Mirror: ${GREEN}Yes${CYAN}                               ║${NC}"
+else
+    echo -e "${CYAN}║  • Using China Mirror: ${YELLOW}No${CYAN}                                ║${NC}"
 fi
-echo "║                                                                  ║"
-echo "║ Important Next Steps:                                            ║"
-echo "║  • Reload shell: ${YELLOW}source $SHELL_RC${CYAN}                    ║"
-echo "║  • Or reopen terminal                                            ║"
-echo "║  • Test: ${YELLOW}brew --version${CYAN}                                ║"
-echo "║  • Update: ${YELLOW}brew update${CYAN}                                  ║"
-echo "║  • Install package: ${YELLOW}brew install wget${CYAN}                     ║"
-echo "║                                                                  ║"
-echo "║ Need help? Run: ${YELLOW}brew help${CYAN}                                 ║"
-echo "╚══════════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+
+echo -e "${CYAN}║                                                                  ║${NC}"
+if [ "$USE_CHINA_MIRROR" = true ]; then
+    echo -e "${CYAN}║ China Mirror Configuration:                                    ║${NC}"
+    echo -e "${CYAN}║  • Repo: Tsinghua Tuna mirror                               ║${NC}"
+    echo -e "${CYAN}║  • Bottles: https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles ║${NC}"
+fi
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║ Important Next Steps:                                            ║${NC}"
+echo -e "${CYAN}║  • Reload shell: ${YELLOW}source $SHELL_RC${CYAN}                    ║${NC}"
+echo -e "${CYAN}║  • Or reopen terminal                                            ║${NC}"
+echo -e "${CYAN}║  • Test: ${YELLOW}brew --version${CYAN}                                ║${NC}"
+echo -e "${CYAN}║  • Update: ${YELLOW}brew update${CYAN}                                  ║${NC}"
+echo -e "${CYAN}║  • Install package: ${YELLOW}brew install wget${CYAN}                     ║${NC}"
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║ Need help? Run: ${YELLOW}brew help${CYAN}                                 ║${NC}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════════╝${NC}"
+echo ""
 
 # Final instructions
 log_step "10. Final Steps"
