@@ -169,7 +169,7 @@ configure_plugins() {
       print_success "Basic plugins enabled" ;;
 
     docker)
-      local set=(git sudo dotenv wd tmux docker docker-compose docker-machine zsh-syntax-highlighting zsh-autosuggestions)
+      local set=(git sudo dotenv wd tmux docker docker-compose zsh-syntax-highlighting zsh-autosuggestions)
       [[ $(uname) != Darwin ]] && set+=(systemd)
       run_omz_command plugin enable ${set[@]}
       echo -e "${GREEN}${ICON_DOCKER} Docker plugins enabled${NC}" ;;
