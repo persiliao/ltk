@@ -303,7 +303,6 @@ fi
 
 log_step "9. Display Configuration Summary"
 
-# 修复颜色显示问题 - 使用多个 echo 语句而不是 heredoc
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║                  Homebrew Installation Complete                  ║${NC}"

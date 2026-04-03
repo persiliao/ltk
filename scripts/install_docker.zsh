@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -e  # Exit immediately if any command returns a non-zero status
+set -e  # Exit immediately if any command returns a non-zero status
 
 # Color definitions
 RED='\033[0;31m'
@@ -104,6 +104,13 @@ OS_NAME=$(echo "$OS_INFO" | grep "NAME=" | cut -d= -f2 | tr -d '\"')
 OS_VERSION=$(echo "$OS_INFO" | grep "VERSION_ID=" | cut -d= -f2 | tr -d '\"' 2>/dev/null || echo "Unknown")
 log_info "Detected: $OS_NAME $OS_VERSION"
 log_info "Current user: $USER"
+
+# Check if user has sudo privileges
+if ! sudo -v 2>/dev/null; then
+    log_error "User $USER does not have sudo privileges or password is required"
+    log_error "Please ensure you have sudo access before running this script"
+    exit 1
+fi
 
 # 1. Check and install curl
 if ! command -v curl &> /dev/null; then
@@ -249,48 +256,62 @@ else
 fi
 
 log_step "9. Display Configuration Summary"
-echo -e "${CYAN}"
-echo "╔══════════════════════════════════════════════════════════════════╗"
-echo "║                  Docker Installation Complete                    ║"
-echo "╠══════════════════════════════════════════════════════════════════╣"
-echo "║ Configuration Summary:                                           ║"
-echo "║                                                                  ║"
-echo "║  • Docker Version: $(printf '%-20s' "$DOCKER_VERSION")"
-echo "║  • Service Status: $(systemctl is-active docker)"
-echo "║  • Current User: $USER"
-echo "║  • User in docker group: $(getent group docker | grep -q "\b$USER\b" && echo -e "${GREEN}✓${CYAN}" || echo -e "${RED}✗${CYAN}")"
-echo "║  • Registry Mirrors: $([ "$USE_REGISTRY_MIRRORS" = true ] && echo -e "${GREEN}Enabled${CYAN}" || echo -e "${YELLOW}Disabled${CYAN}")"
-echo "║                                                                  ║"
+
+# 修复颜色显示 - 使用多个 echo 语句
+echo ""
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║                  Docker Installation Complete                    ║${NC}"
+echo -e "${CYAN}╠══════════════════════════════════════════════════════════════════╣${NC}"
+echo -e "${CYAN}║ Configuration Summary:                                           ║${NC}"
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║  • Docker Version: $(printf '%-20s' "$DOCKER_VERSION")${NC}"
+echo -e "${CYAN}║  • Service Status: $(systemctl is-active docker)${NC}"
+echo -e "${CYAN}║  • Current User: $USER${NC}"
+
+# Check if user is in docker group
+if getent group docker | grep -q "\b$USER\b"; then
+    echo -e "${CYAN}║  • User in docker group: ${GREEN}✓${CYAN}                          ║${NC}"
+else
+    echo -e "${CYAN}║  • User in docker group: ${RED}✗${CYAN}                           ║${NC}"
+fi
+
+if [ "$USE_REGISTRY_MIRRORS" = true ]; then
+    echo -e "${CYAN}║  • Registry Mirrors: ${GREEN}Enabled${CYAN}                      ║${NC}"
+else
+    echo -e "${CYAN}║  • Registry Mirrors: ${YELLOW}Disabled${CYAN}                     ║${NC}"
+fi
+
+echo -e "${CYAN}║                                                                  ║${NC}"
 
 if [ "$USE_REGISTRY_MIRRORS" = true ]; then
     if [ "$REGISTRY_MIRRORS" = "china" ]; then
-        echo "║ China-optimized registry mirrors enabled:                      ║"
-        echo "║  • https://docker.xuanyuan.me                      ║"
-        echo "║  • https://mirror.ccs.tencentyun.com                ║"
-        echo "║  • https://docker.mirrors.ustc.edu.cn               ║"
-        echo "║  • https://hub-mirror.c.163.com                     ║"
+        echo -e "${CYAN}║ China-optimized registry mirrors enabled:                      ║${NC}"
+        echo -e "${CYAN}║  • https://docker.xuanyuan.me                      ║${NC}"
+        echo -e "${CYAN}║  • https://mirror.ccs.tencentyun.com                ║${NC}"
+        echo -e "${CYAN}║  • https://docker.mirrors.ustc.edu.cn               ║${NC}"
+        echo -e "${CYAN}║  • https://hub-mirror.c.163.com                     ║${NC}"
     elif [ -n "$REGISTRY_MIRRORS" ]; then
-        echo "║ Custom registry mirror:                                        ║"
-        echo "║  • $REGISTRY_MIRRORS"
+        echo -e "${CYAN}║ Custom registry mirror:                                        ║${NC}"
+        echo -e "${CYAN}║  • $REGISTRY_MIRRORS${NC}"
     fi
 else
-    echo "║ Registry: ${YELLOW}Using Docker Hub directly (no mirrors)${CYAN}       ║"
-    echo "║ Tip: If in China, restart with --china-mirrors for faster pulls  ║"
+    echo -e "${CYAN}║ Registry: ${YELLOW}Using Docker Hub directly (no mirrors)${CYAN}       ║${NC}"
+    echo -e "${CYAN}║ Tip: If in China, restart with --china-mirrors for faster pulls  ║${NC}"
 fi
 
-echo "║                                                                  ║"
-echo "║ Important Next Steps:                                            ║"
-echo "║  • Re-login or run: ${YELLOW}newgrp docker${CYAN}                       ║"
-echo "║  • Test: ${YELLOW}docker run --rm alpine echo 'Docker ready!'${CYAN}       ║"
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║ Important Next Steps:                                            ║${NC}"
+echo -e "${CYAN}║  • Re-login or run: ${YELLOW}newgrp docker${CYAN}                       ║${NC}"
+echo -e "${CYAN}║  • Test: ${YELLOW}docker run --rm alpine echo 'Docker ready!'${CYAN}       ║${NC}"
 if [ "$USE_REGISTRY_MIRRORS" = true ]; then
-    echo "║  • Check mirrors: ${YELLOW}docker info | grep -A 5 'Registry Mirrors'${CYAN} ║"
+    echo -e "${CYAN}║  • Check mirrors: ${YELLOW}docker info | grep -A 5 'Registry Mirrors'${CYAN} ║${NC}"
 else
-    echo "║  • Check config: ${YELLOW}docker info | grep -i 'registry'${CYAN}           ║"
+    echo -e "${CYAN}║  • Check config: ${YELLOW}docker info | grep -i 'registry'${CYAN}           ║${NC}"
 fi
-echo "║                                                                  ║"
-echo "║ Need help? Run: ${YELLOW}docker --help${CYAN}                               ║"
-echo "╚══════════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+echo -e "${CYAN}║                                                                  ║${NC}"
+echo -e "${CYAN}║ Need help? Run: ${YELLOW}docker --help${CYAN}                               ║${NC}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════════╝${NC}"
+echo ""
 
 # Cleanup
 rm -f get-docker.sh

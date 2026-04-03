@@ -496,7 +496,6 @@ main() {
     verify_sudoers
     test_configuration
 
-    # Final summary - 使用多个 echo 语句替代 heredoc
     log_step "6. Final Summary"
     echo ""
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════╗${NC}"
