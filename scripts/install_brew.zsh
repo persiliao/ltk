@@ -277,14 +277,7 @@ log_step "7. Install Core Tap"
 log_info "Installing Homebrew core tap..."
 "$INSTALL_DIR/bin/brew" update
 "$INSTALL_DIR/bin/brew" analytics off
-"$INSTALL_DIR/bin/brew" tap homebrew/core
-if [ $? -eq 0 ]; then
-    log_success "Core tap installed"
-else
-    log_warning "Core tap installation had issues, but continuing..."
-fi
 
-log_step "8. Verify Installation"
 log_info "Checking Homebrew version..."
 BREW_VERSION=$("$INSTALL_DIR/bin/brew" --version 2>/dev/null || echo "Unknown")
 if [[ "$BREW_VERSION" != "Unknown" ]]; then
